@@ -162,6 +162,55 @@
     .layout{grid-template-columns:1fr;}
     nav.toc{position:static; max-height:none;}
   }
+
+  /* AI chat widget */
+  #chat-fab{
+    position:fixed; bottom:22px; left:190px; z-index:55;
+    display:flex; align-items:center; gap:8px;
+    background:var(--navy-deep); color:#fff; border:none; border-radius:100px;
+    padding:13px 20px; font-family:'Tajawal',sans-serif; font-weight:700; font-size:13.5px;
+    cursor:pointer; box-shadow:0 8px 22px rgba(21,42,56,.35);
+  }
+  #chat-fab .dot{width:8px; height:8px; border-radius:50%; background:var(--gold); box-shadow:0 0 0 4px rgba(201,162,75,.25);}
+  #chat-panel{
+    position:fixed; bottom:0; left:0; top:0; width:380px; max-width:92vw;
+    background:#fff; z-index:70; box-shadow:6px 0 30px rgba(0,0,0,.18);
+    display:flex; flex-direction:column; transform:translateX(-105%);
+    transition:transform .28s ease;
+  }
+  #chat-panel.open{transform:translateX(0);}
+  .chat-head{
+    background:var(--navy); color:#fff; padding:18px 20px; display:flex; align-items:center; gap:12px;
+  }
+  .chat-head .avatar{
+    width:36px; height:36px; border-radius:50%; background:var(--gold);
+    display:flex; align-items:center; justify-content:center; font-family:'Cairo',sans-serif; font-weight:800; color:var(--navy-deep);
+  }
+  .chat-head h3{margin:0; font-size:15px;}
+  .chat-head p{margin:2px 0 0; font-size:12px; color:#c9d4db;}
+  .chat-head .close-btn{margin-inline-start:auto; background:none; border:none; color:#fff; font-size:20px; cursor:pointer; opacity:.8;}
+  .chat-messages{flex:1; overflow:auto; padding:18px; display:flex; flex-direction:column; gap:12px; background:var(--cream);}
+  .msg{max-width:88%; padding:10px 14px; border-radius:14px; font-size:13.5px; line-height:1.6;}
+  .msg.bot{background:#fff; border:1px solid var(--line); align-self:flex-start; border-bottom-left-radius:4px;}
+  .msg.user{background:var(--navy); color:#fff; align-self:flex-end; border-bottom-right-radius:4px;}
+  .msg.system-note{align-self:center; background:var(--gold-soft); color:#584b2c; font-size:12px; border-radius:100px; padding:6px 14px;}
+  .chat-input-row{display:flex; gap:8px; padding:14px; border-top:1px solid var(--line); background:#fff;}
+  .chat-input-row textarea{
+    flex:1; resize:none; border:1px solid var(--line); border-radius:10px; padding:10px 12px;
+    font-family:'Tajawal',sans-serif; font-size:13.5px; max-height:90px;
+  }
+  .chat-input-row button{
+    background:var(--gold); color:var(--navy-deep); border:none; border-radius:10px;
+    padding:0 18px; font-weight:700; cursor:pointer;
+  }
+  .field.just-filled input, .field.just-filled textarea, table.rep td.just-filled input{
+    animation: fillGlow 1.4s ease;
+  }
+  @keyframes fillGlow{
+    0%{background:#FFF3D0; border-color:var(--gold);}
+    100%{background:transparent;}
+  }
+  @media print{ #chat-fab, #chat-panel{display:none !important;} }
 </style>
 </head>
 <body>
@@ -187,6 +236,24 @@
 <div class="toolbar">
   <button id="btn-save">حفظ محليًا</button>
   <button id="btn-print">طباعة / PDF</button>
+</div>
+
+<button id="chat-fab"><span class="dot"></span> اسأل خبير البراند</button>
+
+<div id="chat-panel">
+  <div class="chat-head">
+    <div class="avatar">B</div>
+    <div>
+      <h3>خبير البراند الشخصي</h3>
+      <p>يشرح الموقع ويساعدك تعبّي البيانات بالحوار</p>
+    </div>
+    <button class="close-btn" id="chat-close">×</button>
+  </div>
+  <div class="chat-messages" id="chat-messages"></div>
+  <div class="chat-input-row">
+    <textarea id="chat-input" rows="1" placeholder="اكتب رسالتك هنا..."></textarea>
+    <button id="chat-send">إرسال</button>
+  </div>
 </div>
 
 <script>
@@ -336,8 +403,9 @@ const SECTIONS = [
   },
 ];
 
+let __fieldCounter = 0;
 function field(label, isTextarea){
-  const id = "f_" + Math.random().toString(36).slice(2,9);
+  const id = "f" + (__fieldCounter++); // stable across page loads: same call order every time
   return `<div class="field"><label for="${id}">${label}</label>${
     isTextarea ? `<textarea id="${id}" data-key="${label}"></textarea>` : `<input type="text" id="${id}" data-key="${label}">`
   }</div>`;
@@ -378,6 +446,24 @@ main.innerHTML = SECTIONS.map(s=>`
     ${s.body}
   </section>
 `).join("");
+
+// Build a manifest of every field & table so the AI backend always knows
+// the exact ids/labels to target — regenerated from the live DOM, so it
+// never goes stale if sections are edited later.
+function buildSchema(){
+  return SECTIONS.map(s=>{
+    const el = document.getElementById(s.id);
+    const fields = Array.from(el.querySelectorAll('[data-key]')).map(f=>({
+      id: f.id, label: f.dataset.key, type: f.tagName.toLowerCase()
+    }));
+    const tables = Array.from(el.querySelectorAll('table.rep')).map(t=>({
+      id: t.id,
+      headers: Array.from(t.querySelectorAll('thead th')).map(th=>th.textContent.trim())
+    }));
+    return { section_id: s.id, number: s.num, title: s.title, fields, tables };
+  });
+}
+window.BRAND_SCHEMA = buildSchema();
 
 // scroll spy
 const links = Array.from(document.querySelectorAll("nav.toc a"));
@@ -446,6 +532,108 @@ document.getElementById("btn-save").addEventListener("click", ()=>{
   }
 });
 document.getElementById("btn-print").addEventListener("click", ()=> window.print());
+
+/* =========================================================
+   AI CHAT WIDGET
+   ---------------------------------------------------------
+   IMPORTANT: this calls YOUR OWN backend at BACKEND_URL — never
+   put a Gemini API key in this file. The backend proxies the
+   request to Gemini and returns { reply, actions }.
+   See server-example.js for a working backend reference.
+========================================================= */
+const BACKEND_URL = "/api/brand-chat"; // <-- point this at your deployed backend
+
+const chatFab   = document.getElementById("chat-fab");
+const chatPanel = document.getElementById("chat-panel");
+const chatClose = document.getElementById("chat-close");
+const chatMsgs  = document.getElementById("chat-messages");
+const chatInput = document.getElementById("chat-input");
+const chatSend  = document.getElementById("chat-send");
+
+let chatHistory = []; // [{role:'user'|'model', text:'...'}]
+
+chatFab.addEventListener("click", ()=>{
+  chatPanel.classList.add("open");
+  if(chatMsgs.children.length === 0){
+    addMsg("bot", "أهلاً! أنا خبير البراند الشخصي. اسألني عن أي قسم بالاستبيان، أو احكي لي عن مسيرتك المهنية بأسلوبك العادي وأنا بساعدك تعبّي الحقول وأسألك أسئلة أعمق كل ما احتجنا تفاصيل أدق.");
+  }
+});
+chatClose.addEventListener("click", ()=> chatPanel.classList.remove("open"));
+
+function addMsg(role, text){
+  const div = document.createElement("div");
+  div.className = "msg " + (role === "user" ? "user" : role === "note" ? "system-note" : "bot");
+  div.textContent = text;
+  chatMsgs.appendChild(div);
+  chatMsgs.scrollTop = chatMsgs.scrollHeight;
+}
+
+async function sendChat(){
+  const text = chatInput.value.trim();
+  if(!text) return;
+  addMsg("user", text);
+  chatHistory.push({role:"user", text});
+  chatInput.value = "";
+  chatSend.disabled = true;
+
+  try{
+    const res = await fetch(BACKEND_URL, {
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({
+        message: text,
+        history: chatHistory,
+        schema: window.BRAND_SCHEMA,   // full map of every field/table id + label
+        snapshot: collect()             // current values already filled in the form
+      })
+    });
+    if(!res.ok) throw new Error("bad_status");
+    const data = await res.json();
+
+    if(data.reply){
+      addMsg("bot", data.reply);
+      chatHistory.push({role:"model", text:data.reply});
+    }
+    if(Array.isArray(data.actions) && data.actions.length){
+      applyActions(data.actions);
+      addMsg("note", `تم تعبئة ${data.actions.length} حقل تلقائيًا من كلامك — راجعها وعدّل إذا احتجت.`);
+    }
+  }catch(err){
+    addMsg("bot", "ما قدرت أتواصل مع الخادم الخلفي (Backend) اللي يشغّل Gemini. هذا الجزء لازم يُربط بسيرفر فعلي يحمي مفتاح الـ API — راجع ملف server-example.js المرفق للتفاصيل.");
+  }finally{
+    chatSend.disabled = false;
+  }
+}
+
+function applyActions(actions){
+  actions.forEach(a=>{
+    if(a.type === "set_field"){
+      const el = document.getElementById(a.id);
+      if(!el) return;
+      el.value = a.value;
+      const wrap = el.closest(".field");
+      if(wrap){ wrap.classList.add("just-filled"); setTimeout(()=>wrap.classList.remove("just-filled"), 1500); }
+    }
+    if(a.type === "add_row" && a.table){
+      const table = document.getElementById(a.table);
+      if(!table) return;
+      const n = table.querySelectorAll("thead th").length;
+      addRow(a.table, n);
+      const tr = table.querySelector("tbody tr:last-child");
+      const inputs = tr.querySelectorAll("input");
+      (a.values || []).forEach((v,i)=>{ if(inputs[i]) inputs[i].value = v; });
+      tr.querySelectorAll("td").forEach(td=>{
+        td.classList.add("just-filled");
+        setTimeout(()=>td.classList.remove("just-filled"), 1500);
+      });
+    }
+  });
+}
+
+chatSend.addEventListener("click", sendChat);
+chatInput.addEventListener("keydown", (e)=>{
+  if(e.key === "Enter" && !e.shiftKey){ e.preventDefault(); sendChat(); }
+});
 </script>
 </body>
 </html>
