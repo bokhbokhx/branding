@@ -1,116 +1,93 @@
 <!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ابني براندك الشخصي وحسن ظهورك الإلكتروني</title>
 <style>
-:root{--navy:#132b3a;--gold:#c9a24b;--bg:#f5f7f8;--line:#dfe5e8;--muted:#64707a}
-*{box-sizing:border-box} body{margin:0;font-family:Arial,"Tahoma",sans-serif;background:var(--bg);color:#18252d}
-.header{background:linear-gradient(135deg,#102936,#1d4153);color:#fff;padding:34px 20px 28px}
-.wrap{max-width:980px;margin:auto}.brand{font-weight:800;color:#f1ce78;font-size:20px}.header h1{margin:12px 0 6px;font-size:clamp(25px,5vw,42px)}.header p{margin:0;color:#d7e1e6}
-.progressbox{background:#fff;border-radius:16px;padding:16px;margin:-12px auto 22px;box-shadow:0 8px 24px #10293612}
-.progress{height:9px;background:#e8ecee;border-radius:9px;overflow:hidden}.progress>i{display:block;height:100%;width:0;background:var(--gold);transition:.3s}
-#progressText{font-size:13px;color:var(--muted);display:block;margin-top:8px}
-main{padding:0 20px 90px}.step{display:none;background:#fff;border:1px solid var(--line);border-radius:18px;padding:26px;margin-bottom:18px}.step.active{display:block}
-.step h2{margin:0 0 8px;color:var(--navy)}.hint{color:var(--muted);margin:0 0 20px;line-height:1.7}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.full{grid-column:1/-1}
-label{display:block;font-weight:700;font-size:14px;margin-bottom:6px}input,textarea,select{width:100%;padding:12px;border:1px solid #ccd5da;border-radius:10px;font:inherit;background:#fff}textarea{min-height:105px;resize:vertical}
-.choice{display:flex;flex-wrap:wrap;gap:9px}.choice label{margin:0;font-weight:500;border:1px solid var(--line);padding:9px 12px;border-radius:10px;cursor:pointer}.choice input{width:auto;margin-left:6px}
-.item{border:1px solid var(--line);border-radius:14px;padding:16px;margin:12px 0;background:#fcfdfd}.add{border:1px dashed var(--gold);background:#fffaf0;color:#74581d;padding:10px 15px;border-radius:10px;font-weight:700;cursor:pointer}
-.nav{display:flex;justify-content:space-between;gap:12px;margin-top:22px}.btn{border:0;border-radius:10px;padding:12px 18px;font-weight:800;font:inherit;cursor:pointer}.primary{background:var(--navy);color:#fff}.secondary{background:#edf1f3;color:var(--navy)}
-#brandy{position:fixed;top:18px;left:18px;z-index:1000;background:var(--navy);color:#fff;border:1px solid #d8b768;border-radius:99px;padding:12px 18px;font-weight:800;cursor:pointer;box-shadow:0 8px 24px #0003}
-.modal{display:none;position:fixed;inset:0;background:#0008;z-index:999;align-items:center;justify-content:center;padding:18px}.modal.open{display:flex}.panel{width:min(560px,100%);background:#fff;border-radius:18px;padding:22px}.panel h3{margin-top:0}.status{padding:12px;background:#f4f7f8;border-radius:10px;color:var(--muted);margin:12px 0}.record{width:100%;padding:16px;border:0;border-radius:12px;background:var(--gold);font-weight:800;font-size:16px;cursor:pointer}.record.on{background:#b53c3c;color:#fff}.close{float:left;border:0;background:#eef2f3;border-radius:8px;padding:7px 10px;cursor:pointer}
-.summary{background:#f7fafb;padding:16px;border-radius:12px;line-height:1.8}
-@media(max-width:650px){.grid{grid-template-columns:1fr}.full{grid-column:auto}.header{padding-top:72px}}
+:root{--navy:#132b3a;--navy2:#1c4152;--gold:#c9a24b;--bg:#f4f6f7;--line:#dce3e7;--muted:#64717a;--danger:#b53c3c}
+*{box-sizing:border-box} body{margin:0;background:var(--bg);color:#1c2a31;font-family:Arial,Tahoma,sans-serif}
+.hero{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;padding:42px 20px 32px}.wrap{max-width:1000px;margin:auto}
+.logo{font-weight:900;color:#f1d078;letter-spacing:2px}.hero h1{margin:12px 0 8px;font-size:clamp(26px,5vw,44px)}.hero p{margin:0;color:#d9e2e6;line-height:1.8}
+main{padding:0 18px 80px}.progressbox{background:#fff;border-radius:16px;padding:16px;margin:-14px auto 22px;box-shadow:0 8px 25px #00000012}.bar{height:9px;background:#e9edef;border-radius:99px;overflow:hidden}.bar i{display:block;height:100%;background:var(--gold);width:11%;transition:.25s}#stepText{display:block;margin-top:8px;color:var(--muted);font-size:13px}
+.step{display:none;background:#fff;border:1px solid var(--line);border-radius:18px;padding:26px}.step.active{display:block}.step h2{margin:0 0 7px;color:var(--navy)}.hint{margin:0 0 20px;color:var(--muted);line-height:1.7}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:15px}.full{grid-column:1/-1}label{display:block;font-weight:700;font-size:14px;margin-bottom:6px}input,textarea,select{width:100%;padding:12px;border:1px solid #cfd8dd;border-radius:10px;background:#fff;font:inherit}textarea{min-height:105px;resize:vertical}
+.choice{display:flex;flex-wrap:wrap;gap:9px}.choice label{margin:0;border:1px solid var(--line);padding:9px 12px;border-radius:10px;font-weight:500;cursor:pointer}.choice input{width:auto;margin-left:6px}
+.item{border:1px solid var(--line);border-radius:14px;padding:16px;margin:12px 0;background:#fcfdfd}.add,.remove{border:1px dashed var(--gold);padding:10px 14px;border-radius:10px;background:#fffaf0;color:#75591d;font-weight:800;cursor:pointer}.remove{border-color:#e6bcbc;background:#fff7f7;color:#9a3434;float:left;margin-top:10px}
+.nav{display:flex;justify-content:space-between;gap:10px;margin-top:22px}.btn{border:0;border-radius:10px;padding:13px 20px;font:inherit;font-weight:800;cursor:pointer}.primary{background:var(--navy);color:#fff}.secondary{background:#eaf0f2;color:var(--navy)}.tools{display:flex;gap:10px;justify-content:center;margin-top:14px}
+#brandyBtn{position:fixed;top:18px;left:18px;z-index:1000;border:1px solid #e0bd68;border-radius:99px;background:var(--navy);color:#fff;padding:12px 18px;font:inherit;font-weight:900;cursor:pointer;box-shadow:0 8px 22px #0003}
+.modal{display:none;position:fixed;inset:0;z-index:999;background:#0008;padding:18px;align-items:center;justify-content:center}.modal.open{display:flex}.panel{width:min(620px,100%);max-height:88vh;overflow:auto;background:#fff;border-radius:20px;padding:22px}.close{float:left;border:0;background:#eef2f4;border-radius:8px;padding:7px 11px;font-size:18px;cursor:pointer}.panel h3{margin:0 0 6px;color:var(--navy)}.panel p{color:var(--muted);line-height:1.7}.tabs{display:flex;gap:8px;margin:16px 0}.tab{flex:1;border:1px solid var(--line);background:#fff;padding:11px;border-radius:10px;font-weight:800;cursor:pointer}.tab.active{background:var(--navy);color:#fff}.mode{display:none}.mode.active{display:block}.status{padding:12px;border-radius:10px;background:#f2f6f7;color:var(--muted);margin:10px 0}.record{width:100%;border:0;border-radius:12px;padding:16px;background:var(--gold);font:inherit;font-weight:900;font-size:16px;cursor:pointer}.record.recording{background:var(--danger);color:#fff}.send{margin-top:9px;width:100%;border:0;border-radius:10px;padding:12px;background:var(--navy);color:#fff;font:inherit;font-weight:800;cursor:pointer}.send:disabled{opacity:.45}.chatlog{max-height:180px;overflow:auto;margin-top:12px}.msg{padding:10px 12px;border-radius:10px;margin:7px 0;line-height:1.6}.bot{background:#f0f4f5}.user{background:#eef3f7}.note{background:#fff8e8;color:#7a5b16}
+@media(max-width:650px){.hero{padding-top:84px}.grid{grid-template-columns:1fr}.full{grid-column:auto}#brandyBtn{top:12px;left:12px}.tools{flex-direction:column}.btn{width:100%}}
 </style>
 </head>
 <body>
-<button id="brandy" type="button">🎙️ براندي — تحدث معي</button>
-<header class="header"><div class="wrap"><div class="brand">BRANDY</div><h1>ابني براندك الشخصي وحسن ظهورك الإلكتروني</h1><p>نكتشف قصتك وخبراتك وإنجازاتك ونحوّلها إلى بيانات جاهزة لبناء حضورك المهني.</p></div></header>
-<main class="wrap">
-<div class="progressbox"><div class="progress"><i id="bar"></i></div><span id="progressText">المرحلة 1 من 9</span></div>
-<form id="form">
+<button id="brandyBtn" type="button">🎙️ تحدث مع براندي</button>
+<header class="hero"><div class="wrap"><div class="logo">BRANDY</div><h1>ابني براندك الشخصي وحسن ظهورك الإلكتروني</h1><p>رحلة منظمة لاكتشاف قصتك وخبراتك وإنجازاتك وتحويلها إلى قاعدة بيانات لبناء براند شخصي يمثلّك.</p></div></header>
 
+<main class="wrap">
+<div class="progressbox"><div class="bar"><i id="bar"></i></div><span id="stepText"></span></div>
+<form id="brandForm">
 <section class="step active" data-title="الهوية">
-<h2>1. من أنت؟</h2><p class="hint">ابدأ بالمعلومات الأساسية. ويمكنك استخدام «براندي» والتحدث بدل الكتابة.</p>
-<div class="grid">
-<div><label>الاسم الكامل *</label><input name="full_name" required></div>
-<div><label>الاسم بالإنجليزية</label><input name="english_name"></div>
-<div><label>المدينة</label><input name="city"></div>
-<div><label>المسمى الذي تفضله للظهور</label><input name="preferred_name" placeholder="الاسم، اللقب، الكنية أو اسم معروف به"></div>
-<div class="full"><label>كيف تحب أن يعرّفك الناس؟</label><textarea name="identity"></textarea></div>
-</div></section>
+<h2>1. من أنت؟</h2><p class="hint">ابدأ بالمعلومات الأساسية، أو استخدم براندي وتحدث بدل الكتابة.</p>
+<div class="grid"><div><label>الاسم الكامل *</label><input name="full_name" required></div><div><label>الاسم بالإنجليزية</label><input name="english_name"></div><div><label>المدينة</label><input name="city"></div><div><label>الاسم أو اللقب الذي تحب أن تُعرف به</label><input name="preferred_name"></div><div class="full"><label>كيف تحب أن يعرّفك الناس؟</label><textarea name="identity"></textarea></div></div>
+</section>
 
 <section class="step" data-title="الهدف">
-<h2>2. لماذا تبني براندك الشخصي؟</h2><p class="hint">اختر كل الأهداف التي تهمك الآن أو مستقبلًا.</p>
-<div class="choice" data-choice="goals">
-<label><input type="checkbox" value="وظيفة">وظيفة</label><label><input type="checkbox" value="مجلس إدارة">مجالس إدارة</label><label><input type="checkbox" value="استشارات">استشارات</label><label><input type="checkbox" value="شراكات">شراكات</label><label><input type="checkbox" value="عملاء">عملاء</label><label><input type="checkbox" value="استثمار">استثمار</label><label><input type="checkbox" value="تحدث وإعلام">تحدث وإعلام</label><label><input type="checkbox" value="سمعة وحضور">سمعة وحضور</label>
-</div>
-<div class="grid" style="margin-top:18px"><div class="full"><label>ما أهم نتيجة تريد الوصول لها خلال 3 سنوات؟ *</label><textarea name="three_year_goal" required></textarea></div></div></section>
+<h2>2. لماذا تبني براندك الشخصي؟</h2><p class="hint">اختر أكثر من هدف إذا كان ذلك مناسبًا.</p>
+<div class="choice" data-name="goals">
+<label><input type="checkbox" value="وظيفة">وظيفة</label><label><input type="checkbox" value="مجالس إدارة">مجالس إدارة</label><label><input type="checkbox" value="استشارات">استشارات</label><label><input type="checkbox" value="شراكات">شراكات</label><label><input type="checkbox" value="عملاء">عملاء</label><label><input type="checkbox" value="استثمار">استثمار</label><label><input type="checkbox" value="تحدث وإعلام">تحدث وإعلام</label><label><input type="checkbox" value="سمعة وحضور">سمعة وحضور</label>
+</div><div class="grid" style="margin-top:18px"><div class="full"><label>أهم نتيجة تريد الوصول إليها خلال 3 سنوات *</label><textarea name="three_year_goal" required></textarea></div></div>
+</section>
 
 <section class="step" data-title="التموضع">
-<h2>3. التموضع المهني</h2><div class="grid">
-<div class="full"><label>ما المجالات التي تريد أن ترتبط باسمك؟</label><div class="choice" data-choice="areas">
+<h2>3. التموضع المهني</h2><div class="grid"><div class="full"><label>المجالات التي تريد أن ترتبط باسمك</label><div class="choice" data-name="areas">
 <label><input type="checkbox" value="الإدارة">الإدارة</label><label><input type="checkbox" value="القيادة">القيادة</label><label><input type="checkbox" value="التسويق">التسويق</label><label><input type="checkbox" value="الاستراتيجية">الاستراتيجية</label><label><input type="checkbox" value="الاستثمار">الاستثمار</label><label><input type="checkbox" value="ريادة الأعمال">ريادة الأعمال</label><label><input type="checkbox" value="الذكاء الاصطناعي">الذكاء الاصطناعي</label><label><input type="checkbox" value="الحوكمة">الحوكمة</label>
-</div></div>
-<div class="full"><label>ما المجالات التي لا تريد أن يتم ربطك بها؟</label><textarea name="avoid_areas"></textarea></div></div></section>
+</div></div><div class="full"><label>مجالات لا تريد أن ترتبط بها</label><textarea name="avoid_areas"></textarea></div></div>
+</section>
 
-<section class="step" data-title="الخبرات">
-<h2>4. الخبرات العملية</h2><p class="hint">أضف كل تجربة مهمة. الإنجازات يفضل أن تكون بأرقام ونسب.</p><div id="experiences"></div><button type="button" class="add" data-add="experience">＋ إضافة خبرة</button></section>
+<section class="step" data-title="الخبرات"><h2>4. الخبرات العملية</h2><p class="hint">كل وظيفة أو تجربة مهمة تكون في بطاقة مستقلة.</p><div id="experiences"></div><button type="button" class="add" onclick="addExperience()">＋ إضافة خبرة</button></section>
+<section class="step" data-title="الإنجازات"><h2>5. الإنجازات والمشاريع</h2><p class="hint">ركز على الأرقام والنسب وحجم الأثر.</p><div id="achievements"></div><button type="button" class="add" onclick="addAchievement()">＋ إضافة إنجاز أو مشروع</button></section>
+<section class="step" data-title="التطوير"><h2>6. التعليم والشهادات والورش</h2><div id="education"></div><button type="button" class="add" onclick="addEducation()">＋ إضافة مؤهل أو شهادة أو ورشة</button></section>
 
-<section class="step" data-title="الإنجازات">
-<h2>5. الإنجازات والمشاريع</h2><div id="achievements"></div><button type="button" class="add" data-add="achievement">＋ إضافة إنجاز أو مشروع</button>
-<div style="margin-top:20px"><label>ما الإنجاز الذي تفخر به أكثر؟ ولماذا؟</label><textarea name="proud_achievement"></textarea></div></section>
+<section class="step" data-title="الأثر"><h2>7. العضويات والتطوع والإعلام</h2><div class="grid"><div class="full"><label>العضويات ومجالس الإدارة واللجان</label><textarea name="memberships"></textarea></div><div class="full"><label>التطوع (الجهة، الدور، الساعات، الأثر)</label><textarea name="volunteering"></textarea></div><div class="full"><label>التحدث والإعلام والبودكاست</label><textarea name="media"></textarea></div></div></section>
 
-<section class="step" data-title="التعليم">
-<h2>6. التعليم والتطوير</h2><div id="education"></div><button type="button" class="add" data-add="education">＋ إضافة مؤهل أو شهادة أو ورشة</button></section>
+<section class="step" data-title="الشخصية"><h2>8. شخصيتك وقصتك</h2><div class="grid"><div><label>نقاط القوة</label><textarea name="strengths"></textarea></div><div><label>أشياء تريد تطويرها</label><textarea name="development"></textarea></div><div><label>ما الذي يميزك؟</label><textarea name="difference"></textarea></div><div><label>الفرص التي تراها أمامك</label><textarea name="opportunities"></textarea></div><div class="full"><label>قصص تحب أن تحكيها</label><textarea name="stories"></textarea></div><div class="full"><label>قصص أو مواضيع لا تريد ظهورها</label><textarea name="boundaries"></textarea></div></div></section>
 
-<section class="step" data-title="الأثر">
-<h2>7. العضويات والتطوع والإعلام</h2><div class="grid">
-<div class="full"><label>العضويات أو مجالس الإدارة أو اللجان</label><textarea name="memberships" placeholder="الجهة، الدور، الفترة، الأثر"></textarea></div>
-<div class="full"><label>التطوع</label><textarea name="volunteering" placeholder="الجهة، الدور، عدد الساعات إن وجد، الأثر"></textarea></div>
-<div class="full"><label>التحدث والإعلام</label><textarea name="media" placeholder="مؤتمرات، بودكاست، لقاءات، مقالات، محاضرات"></textarea></div>
-</div></section>
+<section class="step" data-title="المستقبل"><h2>9. المستقبل والهوية</h2><div class="grid"><div class="full"><label>كيف ترى نفسك بعد 5 سنوات؟ *</label><textarea name="five_year_vision" required></textarea></div><div><label>الألوان المفضلة</label><input name="colors"></div><div><label>ستايل الظهور المفضل</label><input name="style"></div><div class="full"><label>أي معلومة مهمة تريد إضافتها؟</label><textarea name="anything_else"></textarea></div></div></section>
 
-<section class="step" data-title="الشخصية">
-<h2>8. شخصيتك وقصتك</h2><div class="grid">
-<div><label>أهم نقاط قوتك</label><textarea name="strengths"></textarea></div><div><label>نقاط تريد تطويرها</label><textarea name="development"></textarea></div>
-<div><label>ما الذي يميزك عن الآخرين؟</label><textarea name="difference"></textarea></div><div><label>ما الفرص التي تراها أمامك؟</label><textarea name="opportunities"></textarea></div>
-<div class="full"><label>ما القصص التي تحب أن تحكيها عن حياتك أو مسيرتك؟</label><textarea name="stories"></textarea></div>
-<div class="full"><label>ما القصص أو المواضيع التي لا تريد ظهورها في براندك؟</label><textarea name="boundaries"></textarea></div>
-</div></section>
-
-<section class="step" data-title="المستقبل">
-<h2>9. المستقبل والهوية</h2><div class="grid">
-<div class="full"><label>كيف ترى نفسك بعد 5 سنوات؟ *</label><textarea name="five_year_vision" required></textarea></div>
-<div><label>الألوان المفضلة</label><input name="colors"></div><div><label>ستايل الظهور الذي تفضله</label><input name="style"></div>
-<div class="full"><label>أي شيء مهم تريد أن يعرفه براندي عنك؟</label><textarea name="anything_else"></textarea></div>
-</div>
-<div class="summary"><b>بعد الحفظ:</b> سنرسل هذه البيانات إلى مرحلة التحليل لبناء التموضع، Brand DNA، المحتوى، السيرة والملف التعريفي.</div></section>
-
-<div class="nav"><button class="btn secondary" id="prev" type="button">السابق</button><button class="btn primary" id="next" type="button">التالي</button></div>
-<div class="nav" style="margin-top:10px"><button class="btn secondary" id="save" type="button">💾 حفظ محلي</button><button class="btn secondary" id="print" type="button">🖨️ طباعة / PDF</button></div>
+<div class="nav"><button id="prev" type="button" class="btn secondary">السابق</button><button id="next" type="button" class="btn primary">التالي</button></div>
+<div class="tools"><button id="save" type="button" class="btn secondary">💾 حفظ محلي</button><button id="print" type="button" class="btn secondary">🖨️ طباعة / PDF</button></div>
 </form></main>
 
-<div class="modal" id="modal"><div class="panel"><button class="close" id="closeModal">×</button><h3>🎙️ براندي</h3><p>تحدث بشكل طبيعي عن نفسك. نبدأ بالصوت، وبعدها نربطه بـ n8n لتحليل التسجيل واستخراج البيانات.</p><div class="status" id="voiceStatus">اضغط الزر واسمح باستخدام الميكروفون.</div><button class="record" id="record" type="button">ابدأ التسجيل</button></div></div>
+<div class="modal" id="modal"><div class="panel"><button id="closeModal" class="close" type="button">×</button><h3>🎙️ براندي</h3><p>تحدث معي بصوتك أو اكتب. يمكنك شرح خبراتك وقصتك وإنجازاتك بشكل طبيعي، ثم سنربط ذلك بـ n8n لاستخراج المعلومات وتعبئة الاستبيان.</p>
+<div class="tabs"><button class="tab active" data-mode="voice" type="button">🎙️ تحدث</button><button class="tab" data-mode="text" type="button">⌨️ اكتب</button></div>
+<div id="voiceMode" class="mode active"><div id="voiceStatus" class="status">اضغط «ابدأ التسجيل» ثم اسمح باستخدام الميكروفون.</div><button id="recordBtn" class="record" type="button">🎙️ ابدأ التسجيل</button><button id="sendVoice" class="send" type="button" disabled>إرسال التسجيل إلى براندي</button></div>
+<div id="textMode" class="mode"><textarea id="textInput" placeholder="اكتب هنا عن نفسك أو خبراتك أو أي معلومة تريد أن يعرفها براندي..."></textarea><button id="sendText" class="send" type="button">إرسال إلى براندي</button></div>
+<div id="chatLog" class="chatlog"></div></div></div>
 
 <script>
 const BACKEND_URL="https://bokhbokhx.app.n8n.cloud/webhook-test/brand-chat";
-const steps=[...document.querySelectorAll(".step")], form=document.getElementById("form"); let current=0;
-function showStep(n){current=Math.max(0,Math.min(n,steps.length-1));steps.forEach((s,i)=>s.classList.toggle("active",i===current));document.getElementById("prev").disabled=current===0;document.getElementById("next").textContent=current===steps.length-1?"إنهاء":"التالي";document.getElementById("bar").style.width=((current+1)/steps.length*100)+"%";document.getElementById("progressText").textContent=`المرحلة ${current+1} من ${steps.length} — ${steps[current].dataset.title}`;window.scrollTo({top:0,behavior:"smooth"})}
-document.getElementById("next").onclick=()=>{if(current<steps.length-1)showStep(current+1);else{localStorage.setItem("brandyData",JSON.stringify(Object.fromEntries(new FormData(form))));alert("تم حفظ الاستبيان محليًا بنجاح ✓")}};
-document.getElementById("prev").onclick=()=>showStep(current-1);
-document.getElementById("save").onclick=()=>{localStorage.setItem("brandyData",JSON.stringify(Object.fromEntries(new FormData(form))));alert("تم الحفظ محليًا ✓")};
-document.getElementById("print").onclick=()=>window.print();
-function expTemplate(i){return `<div class="item"><div class="grid"><div><label>اسم الشركة</label><input name="exp_company_${i}"></div><div><label>المنصب</label><input name="exp_role_${i}"></div><div><label>الفترة</label><input name="exp_period_${i}" placeholder="2022 - 2025"></div><div><label>حجم الفريق (إن وجد)</label><input name="exp_team_${i}"></div><div class="full"><label>أهم المهام</label><textarea name="exp_tasks_${i}"></textarea></div><div class="full"><label>الإنجازات بالأرقام والنسب</label><textarea name="exp_results_${i}" placeholder="مثال: رفعت المبيعات 35%، قدت فريقًا من 20 شخصًا..."></textarea></div></div></div>`}
-function achievementTemplate(i){return `<div class="item"><div class="grid"><div><label>اسم الإنجاز أو المشروع</label><input name="ach_name_${i}"></div><div><label>دورك</label><input name="ach_role_${i}"></div><div class="full"><label>ماذا حققت؟ بالأرقام إن أمكن</label><textarea name="ach_result_${i}"></textarea></div></div></div>`}
-function eduTemplate(i){return `<div class="item"><div class="grid"><div><label>النوع</label><select name="edu_type_${i}"><option>مؤهل</option><option>شهادة</option><option>دورة</option><option>ورشة</option></select></div><div><label>الاسم / الجهة</label><input name="edu_name_${i}"></div><div><label>التاريخ</label><input name="edu_date_${i}"></div><div><label>عدد الساعات</label><input name="edu_hours_${i}"></div></div></div>`}
-let counters={experience:0,achievement:0,education:0};function add(type){counters[type]++;document.getElementById(type==="experience"?"experiences":type==="achievement"?"achievements":"education").insertAdjacentHTML("beforeend",type==="experience"?expTemplate(counters[type]):type==="achievement"?achievementTemplate(counters[type]):eduTemplate(counters[type]))}
-document.querySelectorAll("[data-add]").forEach(b=>b.onclick=()=>add(b.dataset.add));add("experience");add("achievement");add("education");
-try{const saved=JSON.parse(localStorage.getItem("brandyData")||"{}");Object.entries(saved).forEach(([k,v])=>{const el=form.elements[k];if(el)el.value=v})}catch(e){}
-showStep(0);
+const form=document.getElementById("brandForm"),steps=[...document.querySelectorAll(".step")],bar=document.getElementById("bar"),stepText=document.getElementById("stepText");let current=0;
+function showStep(i){current=Math.max(0,Math.min(i,steps.length-1));steps.forEach((s,n)=>s.classList.toggle("active",n===current));bar.style.width=(((current+1)/steps.length)*100)+"%";stepText.textContent=`المرحلة ${current+1} من ${steps.length} — ${steps[current].dataset.title}`;document.getElementById("prev").disabled=current===0;document.getElementById("next").textContent=current===steps.length-1?"إنهاء وحفظ":"التالي";window.scrollTo({top:0,behavior:"smooth"})}
+document.getElementById("prev").onclick=()=>showStep(current-1);document.getElementById("next").onclick=()=>{if(current<steps.length-1)showStep(current+1);else saveLocal(true)};document.getElementById("save").onclick=()=>saveLocal(true);document.getElementById("print").onclick=()=>window.print();
+function serialize(){const data=Object.fromEntries(new FormData(form));document.querySelectorAll(".choice").forEach(box=>data[box.dataset.name]=[...box.querySelectorAll("input:checked")].map(x=>x.value));return data}
+function saveLocal(alertUser){localStorage.setItem("brandyData",JSON.stringify(serialize()));if(alertUser)alert("تم حفظ بياناتك محليًا بنجاح ✓")}
+try{const saved=JSON.parse(localStorage.getItem("brandyData")||"{}");Object.entries(saved).forEach(([k,v])=>{if(Array.isArray(v)){document.querySelectorAll(`[data-name="${k}"] input`).forEach(x=>x.checked=v.includes(x.value))}else{const el=form.elements[k];if(el)el.value=v}})}catch(e){}
+let ec=0,ac=0,dc=0;
+function removeCard(btn){btn.closest(".item").remove()}
+function addExperience(){ec++;document.getElementById("experiences").insertAdjacentHTML("beforeend",`<div class="item"><div class="grid"><div><label>الشركة / الجهة</label><input name="exp_company_${ec}"></div><div><label>المنصب</label><input name="exp_role_${ec}"></div><div><label>الفترة</label><input name="exp_period_${ec}" placeholder="2022 - 2025"></div><div><label>حجم الفريق</label><input name="exp_team_${ec}"></div><div class="full"><label>المهام والمسؤوليات</label><textarea name="exp_tasks_${ec}"></textarea></div><div class="full"><label>الإنجازات بالأرقام والنسب</label><textarea name="exp_results_${ec}" placeholder="مثال: رفعت المبيعات 35%، قدت فريقًا من 20 شخصًا، خفضت التكلفة 12%"></textarea></div></div><button type="button" class="remove" onclick="removeCard(this)">حذف</button></div>`)}
+function addAchievement(){ac++;document.getElementById("achievements").insertAdjacentHTML("beforeend",`<div class="item"><div class="grid"><div><label>اسم الإنجاز أو المشروع</label><input name="ach_name_${ac}"></div><div><label>دورك</label><input name="ach_role_${ac}"></div><div><label>الفترة</label><input name="ach_period_${ac}"></div><div><label>حجم المشروع / الأثر</label><input name="ach_scale_${ac}"></div><div class="full"><label>ماذا حققت؟ بالأرقام والنسب</label><textarea name="ach_result_${ac}"></textarea></div></div><button type="button" class="remove" onclick="removeCard(this)">حذف</button></div>`)}
+function addEducation(){dc++;document.getElementById("education").insertAdjacentHTML("beforeend",`<div class="item"><div class="grid"><div><label>النوع</label><select name="edu_type_${dc}"><option>مؤهل</option><option>شهادة</option><option>دورة</option><option>ورشة</option></select></div><div><label>الاسم / الجهة</label><input name="edu_name_${dc}"></div><div><label>التاريخ</label><input name="edu_date_${dc}"></div><div><label>عدد الساعات</label><input name="edu_hours_${dc}"></div></div><button type="button" class="remove" onclick="removeCard(this)">حذف</button></div>`)}
+addExperience();addAchievement();addEducation();showStep(0);
 
-const modal=document.getElementById("modal"),brandy=document.getElementById("brandy"),closeModal=document.getElementById("closeModal"),record=document.getElementById("record"),voiceStatus=document.getElementById("voiceStatus");let recorder,stream,chunks=[];
-brandy.onclick=()=>modal.classList.add("open");closeModal.onclick=()=>modal.classList.remove("open");modal.onclick=e=>{if(e.target===modal)modal.classList.remove("open")};
-record.onclick=async()=>{if(recorder&&recorder.state==="recording"){recorder.stop();return}try{stream=await navigator.mediaDevices.getUserMedia({audio:true});chunks=[];recorder=new MediaRecorder(stream);recorder.ondataavailable=e=>chunks.push(e.data);recorder.onstop=()=>{stream.getTracks().forEach(t=>t.stop());const blob=new Blob(chunks,{type:recorder.mimeType||"audio/webm"});voiceStatus.textContent=`تم التسجيل بنجاح (${Math.round(blob.size/1024)} KB). الربط الصوتي مع n8n هو خطوتنا التالية.`;record.textContent="ابدأ تسجيل جديد";record.classList.remove("on")};recorder.start();record.textContent="⏹️ أوقف التسجيل";record.classList.add("on");voiceStatus.textContent="🔴 جاري التسجيل... تحدث براحتك"}catch(err){voiceStatus.textContent="تعذر الوصول للميكروفون. اسمح للموقع باستخدام الميكروفون من إعدادات المتصفح."}}
-</script></body></html>
+const modal=document.getElementById("modal"),chatLog=document.getElementById("chatLog"),voiceStatus=document.getElementById("voiceStatus"),recordBtn=document.getElementById("recordBtn"),sendVoice=document.getElementById("sendVoice");let recorder=null,stream=null,chunks=[],audioBlob=null;
+document.getElementById("brandyBtn").onclick=()=>modal.classList.add("open");document.getElementById("closeModal").onclick=()=>modal.classList.remove("open");
+document.querySelectorAll(".tab").forEach(t=>t.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));t.classList.add("active");document.querySelectorAll(".mode").forEach(x=>x.classList.remove("active"));document.getElementById(t.dataset.mode+"Mode").classList.add("active")});
+function log(type,text){const d=document.createElement("div");d.className="msg "+type;d.textContent=text;chatLog.appendChild(d);chatLog.scrollTop=chatLog.scrollHeight}
+recordBtn.onclick=async()=>{if(recorder&&recorder.state==="recording"){recorder.stop();return}try{stream=await navigator.mediaDevices.getUserMedia({audio:true});chunks=[];audioBlob=null;sendVoice.disabled=true;recorder=new MediaRecorder(stream);recorder.ondataavailable=e=>{if(e.data.size)chunks.push(e.data)};recorder.onstop=()=>{audioBlob=new Blob(chunks,{type:recorder.mimeType||"audio/webm"});stream.getTracks().forEach(t=>t.stop());recordBtn.textContent="🎙️ تسجيل جديد";recordBtn.classList.remove("recording");voiceStatus.textContent="تم التسجيل بنجاح. الآن اضغط «إرسال التسجيل إلى براندي».";sendVoice.disabled=false};recorder.start();recordBtn.textContent="⏹️ إيقاف التسجيل";recordBtn.classList.add("recording");voiceStatus.textContent="🔴 جاري التسجيل... تحدث براحتك"}catch(err){voiceStatus.textContent="تعذر الوصول للميكروفون. تأكد من السماح للموقع باستخدامه ثم حاول مرة أخرى."}}
+function base64(blob){return new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>ok(r.result);r.onerror=no;r.readAsDataURL(blob)})}
+async function callBrandy(payload){try{const res=await fetch(BACKEND_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});if(!res.ok)throw new Error("HTTP "+res.status);const data=await res.json();if(data.reply)log("bot",data.reply);else log("note","وصل الطلب إلى n8n بنجاح، والخطوة التالية هي تجهيز رد الـ Workflow.");return data}catch(e){log("note","تم تجهيز الإرسال من الموقع، لكن n8n يحتاج الآن Workflow يرد على الطلب. لا مشكلة — هذا ما سنضبطه في الخطوة التالية.");throw e}}
+sendVoice.onclick=async()=>{if(!audioBlob)return;sendVoice.disabled=true;log("user","🎙️ تم إرسال تسجيل صوتي");voiceStatus.textContent="جاري إرسال التسجيل...";try{await callBrandy({input_type:"voice",message:"",snapshot:serialize(),audio:{data_url:await base64(audioBlob),mime_type:audioBlob.type}});voiceStatus.textContent="تم إرسال الطلب إلى براندي."}catch(e){voiceStatus.textContent="تعذر إكمال الرد لأن n8n لم يُجهز للرد بعد."}finally{sendVoice.disabled=false}}
+document.getElementById("sendText").onclick=async()=>{const msg=document.getElementById("textInput").value.trim();if(!msg)return;log("user",msg);document.getElementById("textInput").value="";try{await callBrandy({input_type:"text",message:msg,snapshot:serialize()})}catch(e){}}
+</script>
+</body></html>
