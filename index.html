@@ -1,777 +1,116 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ar" dir="rtl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>ابني براندك الشخصي وحسن ظهورك الإلكتروني</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;700;800&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --navy:#1F3B4D;
-    --navy-deep:#152A38;
-    --gold:#C9A24B;
-    --gold-soft:#E9D9AE;
-    --cream:#FBF9F5;
-    --card:#FFFFFF;
-    --line:#E6E0D2;
-    --text:#2B2B2B;
-    --muted:#767066;
-  }
-  *{box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
-  body{
-    margin:0;
-    background:var(--cream);
-    color:var(--text);
-    font-family:'Tajawal', sans-serif;
-    line-height:1.7;
-  }
-  h1,h2,h3,.brand-font{font-family:'Cairo', sans-serif;}
-
-  /* progress rail */
-  #progress-rail{
-    position:fixed; top:0; right:0; left:0; height:4px;
-    background:var(--line); z-index:60;
-  }
-  #progress-fill{
-    height:100%; width:0%; background:linear-gradient(90deg,var(--gold),var(--navy));
-    transition:width .15s ease;
-  }
-
-  header.hero{
-    max-width:1180px; margin:0 auto; padding:56px 32px 28px;
-  }
-  .eyebrow{
-    display:inline-flex; align-items:center; gap:8px;
-    font-size:13px; letter-spacing:.04em; color:var(--gold); font-weight:700;
-    background:var(--navy); padding:6px 14px; border-radius:100px;
-  }
-  header.hero h1{
-    font-size:40px; font-weight:800; color:var(--navy); margin:18px 0 8px;
-  }
-  header.hero p.sub{
-    font-size:17px; color:var(--muted); max-width:720px; margin:0 0 18px;
-  }
-  .note-box{
-    border-right:4px solid var(--gold); background:#fff; padding:14px 18px;
-    border-radius:6px; font-size:14.5px; color:#584b2c; max-width:820px;
-  }
-
-  .layout{
-    max-width:1180px; margin:0 auto; padding:0 32px 100px;
-    display:grid; grid-template-columns:250px 1fr; gap:36px; align-items:start;
-  }
-  nav.toc{
-    position:sticky; top:24px; background:var(--card); border:1px solid var(--line);
-    border-radius:14px; padding:18px 16px; max-height:calc(100vh - 48px); overflow:auto;
-  }
-  nav.toc h3{margin:0 0 12px; font-size:13px; color:var(--muted); font-weight:700;}
-  nav.toc a{
-    display:flex; gap:10px; align-items:baseline; text-decoration:none; color:var(--text);
-    font-size:13.5px; padding:7px 6px; border-radius:8px;
-  }
-  nav.toc a:hover{background:var(--cream);}
-  nav.toc a .num{
-    font-family:'Cairo',sans-serif; font-weight:800; color:var(--gold); font-size:12px; min-width:18px;
-  }
-  nav.toc a.active{background:var(--navy); color:#fff;}
-  nav.toc a.active .num{color:var(--gold-soft);}
-
-  main{display:flex; flex-direction:column; gap:26px;}
-  section.card{
-    background:var(--card); border:1px solid var(--line); border-radius:16px;
-    padding:28px 30px; scroll-margin-top:24px;
-  }
-  section.card h2{
-    display:flex; align-items:center; gap:12px;
-    font-size:22px; color:var(--navy); margin:0 0 6px; font-weight:800;
-  }
-  section.card h2 .badge{
-    font-family:'Cairo',sans-serif; font-size:13px; font-weight:800;
-    background:var(--navy); color:var(--gold-soft); border-radius:8px;
-    padding:4px 11px; flex-shrink:0;
-  }
-  section.card > .hint{
-    font-size:13.5px; color:var(--muted); margin:0 0 18px; border-right:3px solid var(--gold-soft); padding-right:10px;
-  }
-  h4.sub{font-size:14.5px; color:var(--navy); margin:22px 0 8px; font-weight:700;}
-  h4.sub:first-of-type{margin-top:6px;}
-
-  .options{list-style:none; margin:0 0 16px; padding:0; display:flex; flex-wrap:wrap; gap:8px;}
-  .options li{
-    font-size:13px; background:var(--cream); border:1px solid var(--line);
-    border-radius:100px; padding:6px 14px; color:#5a5449;
-  }
-
-  .field{margin-bottom:14px;}
-  .field label{display:block; font-size:13.5px; font-weight:700; color:var(--navy); margin-bottom:6px;}
-  .field input[type=text], .field textarea{
-    width:100%; border:1px solid var(--line); border-radius:8px; padding:10px 12px;
-    font-family:'Tajawal',sans-serif; font-size:14px; color:var(--text); background:#fff;
-  }
-  .field textarea{resize:vertical; min-height:56px;}
-  .field input:focus, .field textarea:focus, table input:focus{
-    outline:none; border-color:var(--gold); box-shadow:0 0 0 3px rgba(201,162,75,.18);
-  }
-  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:0 20px;}
-  @media (max-width:720px){.grid2{grid-template-columns:1fr;}}
-
-  table.rep{width:100%; border-collapse:collapse; margin-bottom:10px;}
-  table.rep th{
-    background:var(--navy); color:#fff; font-size:12.5px; font-weight:700;
-    padding:9px 8px; text-align:right;
-  }
-  table.rep td{
-    border:1px solid var(--line); padding:4px;
-  }
-  table.rep td input{
-    width:100%; border:none; padding:8px 7px; font-family:'Tajawal',sans-serif;
-    font-size:13.5px; background:transparent;
-  }
-  table.rep td input:focus{outline:none; background:#FFFBEF;}
-  .add-row{
-    display:inline-flex; align-items:center; gap:6px; background:none; border:1px dashed var(--gold);
-    color:var(--navy); font-family:'Tajawal',sans-serif; font-weight:700; font-size:13px;
-    padding:7px 14px; border-radius:100px; cursor:pointer; margin-bottom:6px;
-  }
-  .add-row:hover{background:var(--gold-soft);}
-
-  footer{
-    max-width:1180px; margin:0 auto; padding:10px 32px 60px; text-align:center;
-    color:var(--muted); font-size:13px;
-  }
-
-  .toolbar{
-    position:fixed; bottom:22px; left:22px; z-index:50; display:flex; gap:10px;
-  }
-  .toolbar button{
-    font-family:'Tajawal',sans-serif; font-weight:700; font-size:13.5px;
-    border:none; border-radius:100px; padding:12px 20px; cursor:pointer;
-    box-shadow:0 6px 18px rgba(31,59,77,.25);
-  }
-  #btn-print{background:var(--navy); color:#fff;}
-  #btn-save{background:var(--gold); color:var(--navy-deep);}
-
-  @media print{
-    nav.toc, .toolbar, #progress-rail{display:none !important;}
-    .layout{grid-template-columns:1fr; display:block;}
-    section.card{break-inside:avoid; border:none; padding:14px 0;}
-  }
-  @media (max-width:900px){
-    .layout{grid-template-columns:1fr;}
-    nav.toc{position:static; max-height:none;}
-  }
-
-  /* AI chat widget */
-  /* AI voice assistant — clearly separated from bottom save/print tools */
-  #chat-fab{
-    position:fixed; top:22px; left:22px; z-index:75;
-    display:flex; align-items:center; gap:10px;
-    background:var(--navy-deep); color:#fff; border:1px solid rgba(201,162,75,.45); border-radius:100px;
-    padding:13px 20px; font-family:'Tajawal',sans-serif; font-weight:700; font-size:13.5px;
-    cursor:pointer; box-shadow:0 8px 22px rgba(21,42,56,.28);
-  }
-  #chat-fab:hover{transform:translateY(-1px);}
-  #chat-fab .dot{width:10px; height:10px; border-radius:50%; background:#e05252; box-shadow:0 0 0 4px rgba(224,82,82,.18);}
-  #chat-fab .mic-icon{font-size:18px; line-height:1;}
-  .voice-hint{font-size:12px; opacity:.72; font-weight:500;}
-  @media(max-width:720px){
-    #chat-fab{top:12px; left:12px; padding:10px 14px;}
-    #chat-fab .voice-hint{display:none;}
-  }
-  #chat-panel{
-    position:fixed; bottom:0; left:0; top:0; width:380px; max-width:92vw;
-    background:#fff; z-index:70; box-shadow:6px 0 30px rgba(0,0,0,.18);
-    display:flex; flex-direction:column; transform:translateX(-105%);
-    transition:transform .28s ease;
-  }
-  #chat-panel.open{transform:translateX(0);}
-  .chat-head{
-    background:var(--navy); color:#fff; padding:18px 20px; display:flex; align-items:center; gap:12px;
-  }
-  .chat-head .avatar{
-    width:36px; height:36px; border-radius:50%; background:var(--gold);
-    display:flex; align-items:center; justify-content:center; font-family:'Cairo',sans-serif; font-weight:800; color:var(--navy-deep);
-  }
-  .chat-head h3{margin:0; font-size:15px;}
-  .chat-head p{margin:2px 0 0; font-size:12px; color:#c9d4db;}
-  .chat-head .close-btn{margin-inline-start:auto; background:none; border:none; color:#fff; font-size:20px; cursor:pointer; opacity:.8;}
-  .chat-messages{flex:1; overflow:auto; padding:18px; display:flex; flex-direction:column; gap:12px; background:var(--cream);}
-  .msg{max-width:88%; padding:10px 14px; border-radius:14px; font-size:13.5px; line-height:1.6;}
-  .msg.bot{background:#fff; border:1px solid var(--line); align-self:flex-start; border-bottom-left-radius:4px;}
-  .msg.user{background:var(--navy); color:#fff; align-self:flex-end; border-bottom-right-radius:4px;}
-  .msg.system-note{align-self:center; background:var(--gold-soft); color:#584b2c; font-size:12px; border-radius:100px; padding:6px 14px;}
-  .voice-controls{
-    padding:16px; border-top:1px solid var(--line); background:#fff;
-  }
-  .voice-status{
-    text-align:center; color:var(--muted); font-size:12.5px; margin-bottom:12px;
-  }
-  .voice-record-btn{
-    width:100%; border:none; border-radius:12px; padding:14px 18px; cursor:pointer;
-    font-family:'Tajawal',sans-serif; font-weight:800; font-size:14px;
-    background:var(--gold); color:var(--navy-deep);
-  }
-  .voice-record-btn.recording{
-    background:#b94141; color:#fff; animation:pulseRec 1.2s infinite;
-  }
-  .voice-actions{display:flex; gap:8px; margin-top:8px;}
-  .voice-actions button{
-    flex:1; border:1px solid var(--line); background:#fff; color:var(--navy);
-    border-radius:9px; padding:9px; font-family:'Tajawal',sans-serif; cursor:pointer; font-weight:700;
-  }
-  .voice-actions button:disabled,.voice-record-btn:disabled{opacity:.55; cursor:not-allowed;}
-  @keyframes pulseRec{
-    0%,100%{box-shadow:0 0 0 0 rgba(185,65,65,.35);}
-    50%{box-shadow:0 0 0 9px rgba(185,65,65,0);}
-  }
-  .field.just-filled input, .field.just-filled textarea, table.rep td.just-filled input{
-    animation: fillGlow 1.4s ease;
-  }
-  @keyframes fillGlow{
-    0%{background:#FFF3D0; border-color:var(--gold);}
-    100%{background:transparent;}
-  }
-  @media print{ #chat-fab, #chat-panel{display:none !important;} }
+:root{--navy:#132b3a;--gold:#c9a24b;--bg:#f5f7f8;--line:#dfe5e8;--muted:#64707a}
+*{box-sizing:border-box} body{margin:0;font-family:Arial,"Tahoma",sans-serif;background:var(--bg);color:#18252d}
+.header{background:linear-gradient(135deg,#102936,#1d4153);color:#fff;padding:34px 20px 28px}
+.wrap{max-width:980px;margin:auto}.brand{font-weight:800;color:#f1ce78;font-size:20px}.header h1{margin:12px 0 6px;font-size:clamp(25px,5vw,42px)}.header p{margin:0;color:#d7e1e6}
+.progressbox{background:#fff;border-radius:16px;padding:16px;margin:-12px auto 22px;box-shadow:0 8px 24px #10293612}
+.progress{height:9px;background:#e8ecee;border-radius:9px;overflow:hidden}.progress>i{display:block;height:100%;width:0;background:var(--gold);transition:.3s}
+#progressText{font-size:13px;color:var(--muted);display:block;margin-top:8px}
+main{padding:0 20px 90px}.step{display:none;background:#fff;border:1px solid var(--line);border-radius:18px;padding:26px;margin-bottom:18px}.step.active{display:block}
+.step h2{margin:0 0 8px;color:var(--navy)}.hint{color:var(--muted);margin:0 0 20px;line-height:1.7}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.full{grid-column:1/-1}
+label{display:block;font-weight:700;font-size:14px;margin-bottom:6px}input,textarea,select{width:100%;padding:12px;border:1px solid #ccd5da;border-radius:10px;font:inherit;background:#fff}textarea{min-height:105px;resize:vertical}
+.choice{display:flex;flex-wrap:wrap;gap:9px}.choice label{margin:0;font-weight:500;border:1px solid var(--line);padding:9px 12px;border-radius:10px;cursor:pointer}.choice input{width:auto;margin-left:6px}
+.item{border:1px solid var(--line);border-radius:14px;padding:16px;margin:12px 0;background:#fcfdfd}.add{border:1px dashed var(--gold);background:#fffaf0;color:#74581d;padding:10px 15px;border-radius:10px;font-weight:700;cursor:pointer}
+.nav{display:flex;justify-content:space-between;gap:12px;margin-top:22px}.btn{border:0;border-radius:10px;padding:12px 18px;font-weight:800;font:inherit;cursor:pointer}.primary{background:var(--navy);color:#fff}.secondary{background:#edf1f3;color:var(--navy)}
+#brandy{position:fixed;top:18px;left:18px;z-index:1000;background:var(--navy);color:#fff;border:1px solid #d8b768;border-radius:99px;padding:12px 18px;font-weight:800;cursor:pointer;box-shadow:0 8px 24px #0003}
+.modal{display:none;position:fixed;inset:0;background:#0008;z-index:999;align-items:center;justify-content:center;padding:18px}.modal.open{display:flex}.panel{width:min(560px,100%);background:#fff;border-radius:18px;padding:22px}.panel h3{margin-top:0}.status{padding:12px;background:#f4f7f8;border-radius:10px;color:var(--muted);margin:12px 0}.record{width:100%;padding:16px;border:0;border-radius:12px;background:var(--gold);font-weight:800;font-size:16px;cursor:pointer}.record.on{background:#b53c3c;color:#fff}.close{float:left;border:0;background:#eef2f3;border-radius:8px;padding:7px 10px;cursor:pointer}
+.summary{background:#f7fafb;padding:16px;border-radius:12px;line-height:1.8}
+@media(max-width:650px){.grid{grid-template-columns:1fr}.full{grid-column:auto}.header{padding-top:72px}}
 </style>
 </head>
 <body>
+<button id="brandy" type="button">🎙️ براندي — تحدث معي</button>
+<header class="header"><div class="wrap"><div class="brand">BRANDY</div><h1>ابني براندك الشخصي وحسن ظهورك الإلكتروني</h1><p>نكتشف قصتك وخبراتك وإنجازاتك ونحوّلها إلى بيانات جاهزة لبناء حضورك المهني.</p></div></header>
+<main class="wrap">
+<div class="progressbox"><div class="progress"><i id="bar"></i></div><span id="progressText">المرحلة 1 من 9</span></div>
+<form id="form">
 
-<div id="progress-rail"><div id="progress-fill"></div></div>
+<section class="step active" data-title="الهوية">
+<h2>1. من أنت؟</h2><p class="hint">ابدأ بالمعلومات الأساسية. ويمكنك استخدام «براندي» والتحدث بدل الكتابة.</p>
+<div class="grid">
+<div><label>الاسم الكامل *</label><input name="full_name" required></div>
+<div><label>الاسم بالإنجليزية</label><input name="english_name"></div>
+<div><label>المدينة</label><input name="city"></div>
+<div><label>المسمى الذي تفضله للظهور</label><input name="preferred_name" placeholder="الاسم، اللقب، الكنية أو اسم معروف به"></div>
+<div class="full"><label>كيف تحب أن يعرّفك الناس؟</label><textarea name="identity"></textarea></div>
+</div></section>
 
-<header class="hero">
-  <span class="eyebrow">حسن ظهورك الإلكتروني</span>
-  <h1>ابني براندك الشخصي وحسن ظهورك الإلكتروني</h1>
-  <p class="sub">لإنتاج السيرة الذاتية، الملف التعريفي، الموقع الإلكتروني، ومحتوى المنصات الشخصية بشكل موحّد ومتكامل.</p>
-  <div class="note-box">
-    عبّي كل حقل بأكبر قدر ممكن من التفصيل. كل ما كانت الإجابات دقيقة ومرتبطة بأرقام ونتائج، كل ما طلع المحتوى الناتج (السيرة الذاتية، الموقع، البروفايل) أقوى وأكثر إقناعًا. الاستمارة تُحفظ محليًا في متصفحك أثناء التعبئة — استخدم زر "طباعة / PDF" في الأسفل لتصديرها.
-  </div>
-</header>
-
-<div class="layout">
-  <nav class="toc" id="toc"></nav>
-  <main id="main"></main>
+<section class="step" data-title="الهدف">
+<h2>2. لماذا تبني براندك الشخصي؟</h2><p class="hint">اختر كل الأهداف التي تهمك الآن أو مستقبلًا.</p>
+<div class="choice" data-choice="goals">
+<label><input type="checkbox" value="وظيفة">وظيفة</label><label><input type="checkbox" value="مجلس إدارة">مجالس إدارة</label><label><input type="checkbox" value="استشارات">استشارات</label><label><input type="checkbox" value="شراكات">شراكات</label><label><input type="checkbox" value="عملاء">عملاء</label><label><input type="checkbox" value="استثمار">استثمار</label><label><input type="checkbox" value="تحدث وإعلام">تحدث وإعلام</label><label><input type="checkbox" value="سمعة وحضور">سمعة وحضور</label>
 </div>
+<div class="grid" style="margin-top:18px"><div class="full"><label>ما أهم نتيجة تريد الوصول لها خلال 3 سنوات؟ *</label><textarea name="three_year_goal" required></textarea></div></div></section>
 
-<footer>ابني براندك الشخصي وحسن ظهورك الإلكتروني — نسخة قابلة للتعبئة والطباعة</footer>
+<section class="step" data-title="التموضع">
+<h2>3. التموضع المهني</h2><div class="grid">
+<div class="full"><label>ما المجالات التي تريد أن ترتبط باسمك؟</label><div class="choice" data-choice="areas">
+<label><input type="checkbox" value="الإدارة">الإدارة</label><label><input type="checkbox" value="القيادة">القيادة</label><label><input type="checkbox" value="التسويق">التسويق</label><label><input type="checkbox" value="الاستراتيجية">الاستراتيجية</label><label><input type="checkbox" value="الاستثمار">الاستثمار</label><label><input type="checkbox" value="ريادة الأعمال">ريادة الأعمال</label><label><input type="checkbox" value="الذكاء الاصطناعي">الذكاء الاصطناعي</label><label><input type="checkbox" value="الحوكمة">الحوكمة</label>
+</div></div>
+<div class="full"><label>ما المجالات التي لا تريد أن يتم ربطك بها؟</label><textarea name="avoid_areas"></textarea></div></div></section>
 
-<div class="toolbar">
-  <button id="btn-save">حفظ محليًا</button>
-  <button id="btn-print">طباعة / PDF</button>
+<section class="step" data-title="الخبرات">
+<h2>4. الخبرات العملية</h2><p class="hint">أضف كل تجربة مهمة. الإنجازات يفضل أن تكون بأرقام ونسب.</p><div id="experiences"></div><button type="button" class="add" data-add="experience">＋ إضافة خبرة</button></section>
+
+<section class="step" data-title="الإنجازات">
+<h2>5. الإنجازات والمشاريع</h2><div id="achievements"></div><button type="button" class="add" data-add="achievement">＋ إضافة إنجاز أو مشروع</button>
+<div style="margin-top:20px"><label>ما الإنجاز الذي تفخر به أكثر؟ ولماذا؟</label><textarea name="proud_achievement"></textarea></div></section>
+
+<section class="step" data-title="التعليم">
+<h2>6. التعليم والتطوير</h2><div id="education"></div><button type="button" class="add" data-add="education">＋ إضافة مؤهل أو شهادة أو ورشة</button></section>
+
+<section class="step" data-title="الأثر">
+<h2>7. العضويات والتطوع والإعلام</h2><div class="grid">
+<div class="full"><label>العضويات أو مجالس الإدارة أو اللجان</label><textarea name="memberships" placeholder="الجهة، الدور، الفترة، الأثر"></textarea></div>
+<div class="full"><label>التطوع</label><textarea name="volunteering" placeholder="الجهة، الدور، عدد الساعات إن وجد، الأثر"></textarea></div>
+<div class="full"><label>التحدث والإعلام</label><textarea name="media" placeholder="مؤتمرات، بودكاست، لقاءات، مقالات، محاضرات"></textarea></div>
+</div></section>
+
+<section class="step" data-title="الشخصية">
+<h2>8. شخصيتك وقصتك</h2><div class="grid">
+<div><label>أهم نقاط قوتك</label><textarea name="strengths"></textarea></div><div><label>نقاط تريد تطويرها</label><textarea name="development"></textarea></div>
+<div><label>ما الذي يميزك عن الآخرين؟</label><textarea name="difference"></textarea></div><div><label>ما الفرص التي تراها أمامك؟</label><textarea name="opportunities"></textarea></div>
+<div class="full"><label>ما القصص التي تحب أن تحكيها عن حياتك أو مسيرتك؟</label><textarea name="stories"></textarea></div>
+<div class="full"><label>ما القصص أو المواضيع التي لا تريد ظهورها في براندك؟</label><textarea name="boundaries"></textarea></div>
+</div></section>
+
+<section class="step" data-title="المستقبل">
+<h2>9. المستقبل والهوية</h2><div class="grid">
+<div class="full"><label>كيف ترى نفسك بعد 5 سنوات؟ *</label><textarea name="five_year_vision" required></textarea></div>
+<div><label>الألوان المفضلة</label><input name="colors"></div><div><label>ستايل الظهور الذي تفضله</label><input name="style"></div>
+<div class="full"><label>أي شيء مهم تريد أن يعرفه براندي عنك؟</label><textarea name="anything_else"></textarea></div>
 </div>
+<div class="summary"><b>بعد الحفظ:</b> سنرسل هذه البيانات إلى مرحلة التحليل لبناء التموضع، Brand DNA، المحتوى، السيرة والملف التعريفي.</div></section>
 
-<button id="chat-fab" aria-label="فتح براندي الصوتية">
-  <span class="dot"></span><span class="mic-icon">🎙️</span>
-  <span>براندي</span>
-  <span class="voice-hint">تحدث بصوتك</span>
-</button>
+<div class="nav"><button class="btn secondary" id="prev" type="button">السابق</button><button class="btn primary" id="next" type="button">التالي</button></div>
+<div class="nav" style="margin-top:10px"><button class="btn secondary" id="save" type="button">💾 حفظ محلي</button><button class="btn secondary" id="print" type="button">🖨️ طباعة / PDF</button></div>
+</form></main>
 
-<div id="chat-panel">
-  <div class="chat-head">
-    <div class="avatar">AI</div>
-    <div>
-      <h3>براندي</h3>
-      <p>تحدث بصوتك — نحلل المعلومات والسياق والتعبير الصوتي</p>
-    </div>
-    <button class="close-btn" id="chat-close">×</button>
-  </div>
-  <div class="chat-messages" id="chat-messages"></div>
-  <div class="voice-controls">
-    <div class="voice-status" id="voice-status">اضغط تسجيل وتحدث بشكل طبيعي</div>
-    <button id="voice-record" class="voice-record-btn">🎙️ ابدأ التسجيل</button>
-    <div class="voice-actions">
-      <button id="voice-send" disabled>إرسال التسجيل</button>
-      <button id="voice-cancel" disabled>إلغاء</button>
-    </div>
-  </div>
-</div>
+<div class="modal" id="modal"><div class="panel"><button class="close" id="closeModal">×</button><h3>🎙️ براندي</h3><p>تحدث بشكل طبيعي عن نفسك. نبدأ بالصوت، وبعدها نربطه بـ n8n لتحليل التسجيل واستخراج البيانات.</p><div class="status" id="voiceStatus">اضغط الزر واسمح باستخدام الميكروفون.</div><button class="record" id="record" type="button">ابدأ التسجيل</button></div></div>
 
 <script>
-const SECTIONS = [
-  {
-    id:"s1", num:"١", title:"الهوية الأساسية للبراند",
-    body:`
-      <h4 class="sub">كيف تحب البراند يظهر باسمك؟</h4>
-      <ul class="options">
-        <li>الاسم الأول فقط</li><li>الاسم الأول + اسم العائلة</li>
-        <li>الاسم الأول + اسم العائلة بالكامل (٤ مقاطع)</li>
-        <li>لقب أو كنية معروف فيها (مثال: أبو فلان)</li>
-        <li>اسم مستعار / براند مستقل عن اسم العائلة</li>
-      </ul>
-      <div class="grid2">
-        ${field("الاسم الكامل الرسمي")}
-        ${field("الاسم المعتمد للبراند (كما سيظهر)")}
-        ${field("اللقب أو الكنية إن وجدت")}
-        ${field("تاريخ الميلاد")}
-        ${field("هل يوجد اسم تعريفي شائع يُعرف فيه في مجاله؟")}
-        ${field("المسمى/الصفة التعريفية المختصرة (Tagline)")}
-      </div>
-      <h4 class="sub">الهوية البصرية</h4>
-      <div class="grid2">
-        ${field("اللون الأساسي المفضل")}
-        ${field("اللون الثانوي المفضل")}
-        ${field("ألوان يُفضّل تجنبها")}
-        ${field("هل يوجد شعار أو رمز شخصي حالي؟")}
-        ${field("الأسلوب البصري العام (كلاسيكي / عصري / جريء / هادئ)")}
-      </div>
-    `
-  },
-  {
-    id:"s2", num:"٢", title:"لمحة سريعة بالأرقام",
-    hint:"أرقام إجمالية يُفتخر بها وتصلح لواجهة الملف التعريفي أو الموقع (عدد الفعاليات، عدد المستفيدين، نسب النمو، عدد المتابعين، عدد الفروع/الشركات، ساعات التدريب...).",
-    body: repTable("t2", ["الرقم","الوصف المختصر"], [1,3], 4)
-  },
-  {
-    id:"s3", num:"٣", title:"المسار المهني (لكل جهة عمل بشكل منفصل)",
-    hint:"عبّي صف مستقل لكل جهة عمل. اكتب الإنجازات كأرقام ونسب قدر الإمكان: نسبة نمو، حجم فريق، عدد مشاريع، قيمة مالية، مدة تنفيذ.",
-    body: repTable("t3", ["اسم الجهة/الشركة","القطاع (خاص/حكومي/غير ربحي)","المسمى الوظيفي","من - إلى","أبرز المهام","الإنجازات (بالأرقام والنسب)"], [2,2,2,1,3,3], 4)
-  },
-  {
-    id:"s4", num:"٤", title:"التطوع والعمل المجتمعي",
-    body: repTable("t4", ["الجهة","الدور/الصفة","الفترة","عدد ساعات التطوع","الأثر أو الإنجاز"], [2,2,1,1,3], 3)
-  },
-  {
-    id:"s5", num:"٥", title:"التعليم",
-    body: repTable("t5", ["الدرجة العلمية","التخصص","الجامعة / الجهة","الفترة"], [2,2,2,1], 3)
-      + `<div style="margin-top:10px">${field("عنوان رسالة التخرج أو البحث (إن وجد)")}</div>`
-  },
-  {
-    id:"s6", num:"٦", title:"الخبرات والعضويات والمهارات",
-    body:`
-      <h4 class="sub">العضويات المهنية / في المجالس واللجان</h4>
-      ${repTable("t6a", ["الجهة","الصفة","الفترة"], [3,2,2], 3)}
-      <h4 class="sub">الشهادات المهنية</h4>
-      ${repTable("t6b", ["اسم الشهادة","الجهة المانحة","سنة الحصول عليها"], [3,3,2], 3)}
-      <h4 class="sub">المهارات</h4>
-      <div class="grid2">
-        ${field("مهارات إدارية / قيادية")}
-        ${field("مهارات تقنية / تحليلية")}
-        ${field("اللغات ومستوى الإتقان")}
-        ${field("مهارات أخرى مميزة")}
-      </div>
-    `
-  },
-  {
-    id:"s7", num:"٧", title:"الورش والدورات التدريبية",
-    body: repTable("t7", ["اسم الورشة/الدورة","الجهة المنظمة","التاريخ","المدة","شهادة (نعم/لا)"], [3,2,1,1,1], 4)
-  },
-  {
-    id:"s8", num:"٨", title:"المقابلات والمشاركات الإعلامية",
-    hint:"مقابلات إخبارية، بودكاست، منتديات، وفود رسمية، لجان تحكيم أو اختيار، لقاءات مع شخصيات مهمة.",
-    body: repTable("t8", ["نوع المشاركة (مقابلة/بودكاست/منتدى...)","الجهة أو المنصة","الموضوع","التاريخ"], [3,2,3,1], 5)
-  },
-  {
-    id:"s9", num:"٩", title:"التموضع الشخصي (Positioning)",
-    body:`
-      <h4 class="sub">أين تحس نفسك أقوى؟</h4>
-      <ul class="options">
-        <li>الإدارة والقيادة</li><li>التسويق والعلامات التجارية</li><li>التشغيل والعمليات</li>
-        <li>المالية والاستثمار</li><li>ريادة الأعمال وبناء المشاريع</li><li>أخرى</li>
-      </ul>
-      ${field("المجال المستهدف مستقبلاً")}
-      ${field("لماذا هذا المجال تحديدًا؟", true)}
-    `
-  },
-  {
-    id:"s10", num:"١٠", title:"أهداف إنشاء البراند الشخصي",
-    body:`
-      <ul class="options">
-        <li>عضوية مجالس إدارة</li><li>فرص وظيفية أو انتقال مهني</li><li>شراكات أو مستثمرين</li>
-        <li>توسيع شبكة العلاقات</li><li>الظهور الإعلامي والفكري</li><li>أخرى</li>
-      </ul>
-      <div class="grid2">
-        ${field("الأولوية الأولى")}
-        ${field("الأولوية الثانية")}
-      </div>
-      ${field("ملاحظات إضافية", true)}
-    `
-  },
-  {
-    id:"s11", num:"١١", title:"المشاريع والأعمال (Portfolio)",
-    body: repTable("t11", ["اسم المشروع","الدور فيه","الفترة","النتيجة/الأثر (بالأرقام إن أمكن)"], [2,2,1,3], 4)
-  },
-  {
-    id:"s12", num:"١٢", title:"تحليل الذات (SWOT مبسّط)",
-    body:`
-      ${field("أبرز ٣ نقاط قوة", true)}
-      ${field("أبرز ٢ نقطة ضعف يعمل عليها", true)}
-      ${field("الفرص التي يراها متاحة أمامه", true)}
-      ${field("التحديات أو المخاطر التي يستشعرها", true)}
-    `
-  },
-  {
-    id:"s13", num:"١٣", title:"عوامل التميز",
-    body:`
-      ${field("ما الذي يميزه عن غيره في نفس المجال؟", true)}
-      ${field("أسلوب عمل أو مبدأ يتبعه دائمًا", true)}
-      ${field("شهادة أو تقييم حصل عليه من الآخرين (اقتباس)", true)}
-    `
-  },
-  {
-    id:"s14", num:"١٤", title:"القصص والسرديات الشخصية",
-    body:`
-      <h4 class="sub">قصص يحب أن تُروى عنه</h4>
-      ${field("قصة نجاح أو إنجاز بارز", true)}
-      ${field("قصة تحدٍّ تم تجاوزه", true)}
-      ${field("قصة تحول مهني أو قرار مفصلي", true)}
-      <h4 class="sub">مواضيع يُفضّل عدم التطرق لها</h4>
-      ${field("مواضيع حساسة يُستثنى ذكرها", true)}
-      ${field("تفاصيل يفضل عدم نشرها علنًا", true)}
-    `
-  },
-  {
-    id:"s15", num:"١٥", title:"بيانات تكميلية للمخرجات النهائية",
-    body:`
-      ${field("نبذة مختصرة جدًا (٢٥-٣٠ كلمة)", true)}
-      ${field("نبذة متوسطة (١٠٠-١٥٠ كلمة)", true)}
-      <div class="grid2">
-        ${field("بيانات التواصل (بريد، جوال، لينكدإن)")}
-        ${field("رابط صورة شخصية / شعار حالي")}
-      </div>
-      ${field("روابط حسابات التواصل الاجتماعي")}
-    `
-  },
-];
+const BACKEND_URL="https://bokhbokhx.app.n8n.cloud/webhook-test/brand-chat";
+const steps=[...document.querySelectorAll(".step")], form=document.getElementById("form"); let current=0;
+function showStep(n){current=Math.max(0,Math.min(n,steps.length-1));steps.forEach((s,i)=>s.classList.toggle("active",i===current));document.getElementById("prev").disabled=current===0;document.getElementById("next").textContent=current===steps.length-1?"إنهاء":"التالي";document.getElementById("bar").style.width=((current+1)/steps.length*100)+"%";document.getElementById("progressText").textContent=`المرحلة ${current+1} من ${steps.length} — ${steps[current].dataset.title}`;window.scrollTo({top:0,behavior:"smooth"})}
+document.getElementById("next").onclick=()=>{if(current<steps.length-1)showStep(current+1);else{localStorage.setItem("brandyData",JSON.stringify(Object.fromEntries(new FormData(form))));alert("تم حفظ الاستبيان محليًا بنجاح ✓")}};
+document.getElementById("prev").onclick=()=>showStep(current-1);
+document.getElementById("save").onclick=()=>{localStorage.setItem("brandyData",JSON.stringify(Object.fromEntries(new FormData(form))));alert("تم الحفظ محليًا ✓")};
+document.getElementById("print").onclick=()=>window.print();
+function expTemplate(i){return `<div class="item"><div class="grid"><div><label>اسم الشركة</label><input name="exp_company_${i}"></div><div><label>المنصب</label><input name="exp_role_${i}"></div><div><label>الفترة</label><input name="exp_period_${i}" placeholder="2022 - 2025"></div><div><label>حجم الفريق (إن وجد)</label><input name="exp_team_${i}"></div><div class="full"><label>أهم المهام</label><textarea name="exp_tasks_${i}"></textarea></div><div class="full"><label>الإنجازات بالأرقام والنسب</label><textarea name="exp_results_${i}" placeholder="مثال: رفعت المبيعات 35%، قدت فريقًا من 20 شخصًا..."></textarea></div></div></div>`}
+function achievementTemplate(i){return `<div class="item"><div class="grid"><div><label>اسم الإنجاز أو المشروع</label><input name="ach_name_${i}"></div><div><label>دورك</label><input name="ach_role_${i}"></div><div class="full"><label>ماذا حققت؟ بالأرقام إن أمكن</label><textarea name="ach_result_${i}"></textarea></div></div></div>`}
+function eduTemplate(i){return `<div class="item"><div class="grid"><div><label>النوع</label><select name="edu_type_${i}"><option>مؤهل</option><option>شهادة</option><option>دورة</option><option>ورشة</option></select></div><div><label>الاسم / الجهة</label><input name="edu_name_${i}"></div><div><label>التاريخ</label><input name="edu_date_${i}"></div><div><label>عدد الساعات</label><input name="edu_hours_${i}"></div></div></div>`}
+let counters={experience:0,achievement:0,education:0};function add(type){counters[type]++;document.getElementById(type==="experience"?"experiences":type==="achievement"?"achievements":"education").insertAdjacentHTML("beforeend",type==="experience"?expTemplate(counters[type]):type==="achievement"?achievementTemplate(counters[type]):eduTemplate(counters[type]))}
+document.querySelectorAll("[data-add]").forEach(b=>b.onclick=()=>add(b.dataset.add));add("experience");add("achievement");add("education");
+try{const saved=JSON.parse(localStorage.getItem("brandyData")||"{}");Object.entries(saved).forEach(([k,v])=>{const el=form.elements[k];if(el)el.value=v})}catch(e){}
+showStep(0);
 
-let __fieldCounter = 0;
-function field(label, isTextarea){
-  const id = "f" + (__fieldCounter++); // stable across page loads: same call order every time
-  return `<div class="field"><label for="${id}">${label}</label>${
-    isTextarea ? `<textarea id="${id}" data-key="${label}"></textarea>` : `<input type="text" id="${id}" data-key="${label}">`
-  }</div>`;
-}
-
-function repTable(tid, headers, flexWeights, initialRows){
-  const ths = headers.map((h,i)=>`<th style="width:${(flexWeights[i]/flexWeights.reduce((a,b)=>a+b,0)*100).toFixed(1)}%">${h}</th>`).join("");
-  let rows = "";
-  for(let i=0;i<initialRows;i++) rows += rowHtml(tid, headers.length);
-  return `
-    <table class="rep" id="${tid}">
-      <thead><tr>${ths}</tr></thead>
-      <tbody>${rows}</tbody>
-    </table>
-    <button type="button" class="add-row" onclick="addRow('${tid}', ${headers.length})">+ إضافة صف</button>
-  `;
-}
-function rowHtml(tid, n){
-  let tds = "";
-  for(let i=0;i<n;i++) tds += `<td><input type="text" data-table="${tid}" data-col="${i}"></td>`;
-  return `<tr>${tds}</tr>`;
-}
-function addRow(tid, n){
-  document.querySelector("#"+tid+" tbody").insertAdjacentHTML("beforeend", rowHtml(tid, n));
-}
-
-// build DOM
-const main = document.getElementById("main");
-const toc = document.getElementById("toc");
-toc.innerHTML = "<h3>محتويات الاستبيان</h3>" + SECTIONS.map(s=>
-  `<a href="#${s.id}" data-target="${s.id}"><span class="num">${s.num}</span><span>${s.title}</span></a>`
-).join("");
-
-main.innerHTML = SECTIONS.map(s=>`
-  <section class="card" id="${s.id}">
-    <h2><span class="badge">${s.num}</span>${s.title}</h2>
-    ${s.hint ? `<p class="hint">${s.hint}</p>` : ""}
-    ${s.body}
-  </section>
-`).join("");
-
-// Build a manifest of every field & table so the AI backend always knows
-// the exact ids/labels to target — regenerated from the live DOM, so it
-// never goes stale if sections are edited later.
-function buildSchema(){
-  return SECTIONS.map(s=>{
-    const el = document.getElementById(s.id);
-    const fields = Array.from(el.querySelectorAll('[data-key]')).map(f=>({
-      id: f.id, label: f.dataset.key, type: f.tagName.toLowerCase()
-    }));
-    const tables = Array.from(el.querySelectorAll('table.rep')).map(t=>({
-      id: t.id,
-      headers: Array.from(t.querySelectorAll('thead th')).map(th=>th.textContent.trim())
-    }));
-    return { section_id: s.id, number: s.num, title: s.title, fields, tables };
-  });
-}
-window.BRAND_SCHEMA = buildSchema();
-
-// scroll spy
-const links = Array.from(document.querySelectorAll("nav.toc a"));
-const secs = SECTIONS.map(s=>document.getElementById(s.id));
-function onScroll(){
-  let idx = 0;
-  const y = window.scrollY + 120;
-  secs.forEach((el,i)=>{ if(el.offsetTop <= y) idx = i; });
-  links.forEach(l=>l.classList.remove("active"));
-  if(links[idx]) links[idx].classList.add("active");
-
-  const doc = document.documentElement;
-  const scrolled = (window.scrollY) / (doc.scrollHeight - window.innerHeight) * 100;
-  document.getElementById("progress-fill").style.width = Math.min(100, Math.max(0,scrolled)) + "%";
-}
-window.addEventListener("scroll", onScroll);
-onScroll();
-
-// local save/restore (in-memory + localStorage fallback attempt guarded)
-const STORAGE_KEY = "brand_intake_v1";
-function collect(){
-  const data = {inputs:{}, tables:{}};
-  document.querySelectorAll('input[data-key], textarea[data-key]').forEach(el=>{
-    data.inputs[el.id] = {key: el.dataset.key, value: el.value};
-  });
-  document.querySelectorAll('table.rep').forEach(t=>{
-    data.tables[t.id] = Array.from(t.querySelectorAll('tbody tr')).map(tr=>
-      Array.from(tr.querySelectorAll('input')).map(i=>i.value)
-    );
-  });
-  return data;
-}
-function restore(data){
-  if(!data) return;
-  Object.entries(data.inputs || {}).forEach(([id,obj])=>{
-    const el = document.getElementById(id);
-    if(el) el.value = obj.value;
-  });
-  Object.entries(data.tables || {}).forEach(([tid, rows])=>{
-    const table = document.getElementById(tid);
-    if(!table) return;
-    const tbody = table.querySelector('tbody');
-    tbody.innerHTML = "";
-    rows.forEach(r=>{
-      const n = r.length;
-      tbody.insertAdjacentHTML('beforeend', rowHtml(tid, n));
-      const tr = tbody.lastElementChild;
-      tr.querySelectorAll('input').forEach((inp,i)=> inp.value = r[i] || "");
-    });
-  });
-}
-try{
-  const saved = localStorage.getItem(STORAGE_KEY);
-  if(saved) restore(JSON.parse(saved));
-}catch(e){ /* storage unavailable, ignore */ }
-
-document.getElementById("btn-save").addEventListener("click", ()=>{
-  try{
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(collect()));
-    const btn = document.getElementById("btn-save");
-    const old = btn.textContent;
-    btn.textContent = "تم الحفظ ✓";
-    setTimeout(()=>btn.textContent = old, 1600);
-  }catch(e){
-    alert("تعذّر الحفظ المحلي في هذا المتصفح. يمكنك استخدام زر الطباعة لتصدير نسخة PDF بدلاً من ذلك.");
-  }
-});
-document.getElementById("btn-print").addEventListener("click", ()=> window.print());
-
-/* =========================================================
-   AI CHAT WIDGET
-   ---------------------------------------------------------
-   IMPORTANT: this calls YOUR OWN backend at BACKEND_URL — never
-   put a Gemini API key in this file. The backend proxies the
-   request to Gemini and returns { reply, actions }.
-   See server-example.js for a working backend reference.
-========================================================= */
-const BACKEND_URL = "https://bokhbokhx.app.n8n.cloud/webhook-test/brand-chat"; // n8n Test Webhook
-
-const chatFab       = document.getElementById("chat-fab");
-const chatPanel     = document.getElementById("chat-panel");
-const chatClose     = document.getElementById("chat-close");
-const chatMsgs      = document.getElementById("chat-messages");
-const voiceStatus   = document.getElementById("voice-status");
-const recordBtn     = document.getElementById("voice-record");
-const voiceSend     = document.getElementById("voice-send");
-const voiceCancel   = document.getElementById("voice-cancel");
-
-let chatHistory = [];
-let mediaRecorder = null;
-let audioChunks = [];
-let recordedBlob = null;
-let recordingTimer = null;
-let recordingSeconds = 0;
-
-chatFab.addEventListener("click", ()=>{
-  chatPanel.classList.add("open");
-  if(chatMsgs.children.length === 0){
-    addMsg("bot", "أهلاً! أنا براندي الخاصة بالبراند الشخصي. تحدث معي بصوتك بشكل طبيعي عن مسيرتك وخبراتك وإنجازاتك، وسأساعدك على استخراج المعلومات وتعبئة الاستبيان. التسجيل الصوتي يُرسل للخادم ليتم تحليله، لذلك تكلم بحرية واذكر التفاصيل والمشاعر والسياق الذي تريد الاحتفاظ به.");
-  }
-});
-chatClose.addEventListener("click", ()=> chatPanel.classList.remove("open"));
-
-function addMsg(role, text){
-  const div = document.createElement("div");
-  div.className = "msg " + (role === "user" ? "user" : role === "note" ? "system-note" : "bot");
-  div.textContent = text;
-  chatMsgs.appendChild(div);
-  chatMsgs.scrollTop = chatMsgs.scrollHeight;
-}
-
-function formatTime(sec){
-  return `${Math.floor(sec/60)}:${String(sec%60).padStart(2,"0")}`;
-}
-
-async function startRecording(){
-  if(!navigator.mediaDevices || !window.MediaRecorder){
-    addMsg("bot", "متصفحك لا يدعم التسجيل الصوتي. افتح الموقع من Chrome أو Safari حديث واسمح باستخدام الميكروفون.");
-    return;
-  }
-  try{
-    const stream = await navigator.mediaDevices.getUserMedia({audio:true});
-    audioChunks = [];
-    recordedBlob = null;
-
-    let options = {};
-    if(MediaRecorder.isTypeSupported("audio/webm")) options.mimeType = "audio/webm";
-    mediaRecorder = new MediaRecorder(stream, options);
-
-    mediaRecorder.ondataavailable = e => { if(e.data.size) audioChunks.push(e.data); };
-    mediaRecorder.onstop = ()=>{
-      const mime = mediaRecorder.mimeType || "audio/webm";
-      recordedBlob = new Blob(audioChunks, {type:mime});
-      stream.getTracks().forEach(t=>t.stop());
-      clearInterval(recordingTimer);
-      recordBtn.classList.remove("recording");
-      recordBtn.textContent = "🎙️ تسجيل جديد";
-      voiceSend.disabled = !recordedBlob;
-      voiceCancel.disabled = !recordedBlob;
-      voiceStatus.textContent = recordedBlob ? "تم التسجيل. اضغط «إرسال التسجيل» لتحليله." : "اضغط تسجيل وتحدث بشكل طبيعي";
-    };
-
-    mediaRecorder.start();
-    recordBtn.classList.add("recording");
-    recordBtn.textContent = "⏹️ إيقاف التسجيل";
-    voiceSend.disabled = true;
-    voiceCancel.disabled = false;
-    recordingSeconds = 0;
-    voiceStatus.textContent = "🔴 جاري التسجيل 0:00 — تحدث براحتك";
-
-    recordingTimer = setInterval(()=>{
-      recordingSeconds++;
-      voiceStatus.textContent = `🔴 جاري التسجيل ${formatTime(recordingSeconds)} — تحدث براحتك`;
-      if(recordingSeconds >= 120 && mediaRecorder?.state === "recording"){
-        mediaRecorder.stop();
-      }
-    },1000);
-  }catch(err){
-    addMsg("bot", "لم يتم السماح باستخدام الميكروفون. اسمح للمتصفح باستخدام الميكروفون ثم حاول مرة أخرى.");
-  }
-}
-
-function stopRecording(){
-  if(mediaRecorder && mediaRecorder.state === "recording"){
-    mediaRecorder.stop();
-  }
-}
-
-recordBtn.addEventListener("click", ()=>{
-  if(mediaRecorder && mediaRecorder.state === "recording") stopRecording();
-  else startRecording();
-});
-
-voiceCancel.addEventListener("click", ()=>{
-  if(mediaRecorder && mediaRecorder.state === "recording") stopRecording();
-  recordedBlob = null;
-  audioChunks = [];
-  voiceSend.disabled = true;
-  voiceCancel.disabled = true;
-  voiceStatus.textContent = "تم إلغاء التسجيل";
-  recordBtn.textContent = "🎙️ ابدأ التسجيل";
-});
-
-function blobToBase64(blob){
-  return new Promise((resolve,reject)=>{
-    const reader = new FileReader();
-    reader.onload = ()=> resolve(reader.result);
-    reader.onerror = reject;
-    reader.readAsDataURL(blob);
-  });
-}
-
-async function sendVoice(){
-  if(!recordedBlob) return;
-
-  addMsg("user", `🎙️ تسجيل صوتي (${formatTime(recordingSeconds)})`);
-  voiceSend.disabled = true;
-  recordBtn.disabled = true;
-  voiceCancel.disabled = true;
-  voiceStatus.textContent = "جاري إرسال وتحليل التسجيل...";
-
-  try{
-    const audioDataUrl = await blobToBase64(recordedBlob);
-
-    const res = await fetch(BACKEND_URL, {
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body: JSON.stringify({
-        input_type: "voice",
-        message: "",
-        history: chatHistory,
-        schema: window.BRAND_SCHEMA,
-        snapshot: collect(),
-        audio: {
-          data_url: audioDataUrl,
-          mime_type: recordedBlob.type || "audio/webm",
-          duration_seconds: recordingSeconds
-        }
-      })
-    });
-
-    if(!res.ok) throw new Error("bad_status");
-    const data = await res.json();
-
-    if(data.transcript){
-      chatHistory.push({role:"user", text:data.transcript});
-      addMsg("note", "تم تفريغ التسجيل وتحليله ✓");
-    }
-    if(data.reply){
-      addMsg("bot", data.reply);
-      chatHistory.push({role:"model", text:data.reply});
-    }
-    if(Array.isArray(data.actions) && data.actions.length){
-      applyActions(data.actions);
-      addMsg("note", `تم تعبئة ${data.actions.length} حقل تلقائيًا من تسجيلك — راجعها وعدّل إذا احتجت.`);
-    }
-
-    recordedBlob = null;
-    audioChunks = [];
-    voiceStatus.textContent = "اضغط تسجيل وتحدث بشكل طبيعي";
-  }catch(err){
-    addMsg("bot", "وصلت مرحلة الإرسال، لكن الـ n8n Workflow لا يزال يحتاج إعدادًا لاستقبال وتحليل الصوت. سنضبطه في الخطوة القادمة.");
-    voiceStatus.textContent = "تعذر إرسال التسجيل — راجع الربط";
-  }finally{
-    recordBtn.disabled = false;
-    recordBtn.textContent = "🎙️ ابدأ التسجيل";
-    voiceSend.disabled = true;
-    voiceCancel.disabled = true;
-  }
-}
-
-function applyActions(actions){
-  actions.forEach(a=>{
-    if(a.type === "set_field"){
-      const el = document.getElementById(a.id);
-      if(!el) return;
-      el.value = a.value;
-      const wrap = el.closest(".field");
-      if(wrap){ wrap.classList.add("just-filled"); setTimeout(()=>wrap.classList.remove("just-filled"), 1500); }
-    }
-    if(a.type === "add_row" && a.table){
-      const table = document.getElementById(a.table);
-      if(!table) return;
-      const n = table.querySelectorAll("thead th").length;
-      addRow(a.table, n);
-      const tr = table.querySelector("tbody tr:last-child");
-      const inputs = tr.querySelectorAll("input");
-      (a.values || []).forEach((v,i)=>{ if(inputs[i]) inputs[i].value = v; });
-      tr.querySelectorAll("td").forEach(td=>{
-        td.classList.add("just-filled");
-        setTimeout(()=>td.classList.remove("just-filled"), 1500);
-      });
-    }
-  });
-}
-
-voiceSend.addEventListener("click", sendVoice);
-</script>
-</body>
-</html>
+const modal=document.getElementById("modal"),brandy=document.getElementById("brandy"),closeModal=document.getElementById("closeModal"),record=document.getElementById("record"),voiceStatus=document.getElementById("voiceStatus");let recorder,stream,chunks=[];
+brandy.onclick=()=>modal.classList.add("open");closeModal.onclick=()=>modal.classList.remove("open");modal.onclick=e=>{if(e.target===modal)modal.classList.remove("open")};
+record.onclick=async()=>{if(recorder&&recorder.state==="recording"){recorder.stop();return}try{stream=await navigator.mediaDevices.getUserMedia({audio:true});chunks=[];recorder=new MediaRecorder(stream);recorder.ondataavailable=e=>chunks.push(e.data);recorder.onstop=()=>{stream.getTracks().forEach(t=>t.stop());const blob=new Blob(chunks,{type:recorder.mimeType||"audio/webm"});voiceStatus.textContent=`تم التسجيل بنجاح (${Math.round(blob.size/1024)} KB). الربط الصوتي مع n8n هو خطوتنا التالية.`;record.textContent="ابدأ تسجيل جديد";record.classList.remove("on")};recorder.start();record.textContent="⏹️ أوقف التسجيل";record.classList.add("on");voiceStatus.textContent="🔴 جاري التسجيل... تحدث براحتك"}catch(err){voiceStatus.textContent="تعذر الوصول للميكروفون. اسمح للموقع باستخدام الميكروفون من إعدادات المتصفح."}}
+</script></body></html>
