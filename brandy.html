@@ -115,6 +115,11 @@ nav.toc .item .chk{margin-right:auto; font-size:11px; color:var(--ok);}
 .mic-btn.busy{background:var(--muted); cursor:not-allowed;}
 @keyframes pulse{50%{transform:scale(1.08);}}
 .voice-status-text{font-size:14px; color:var(--navy); font-weight:700;}
+.live-panel{display:flex; flex-direction:column; align-items:center; gap:12px; padding:22px; background:var(--card); border:1px solid var(--line); border-radius:16px;}
+.live-orb{width:90px; height:90px; border-radius:50%; background:radial-gradient(circle at 35% 30%,#fff 0,var(--gold-soft) 15%,var(--gold) 45%,var(--navy) 100%); display:flex; align-items:center; justify-content:center; font-size:30px; box-shadow:0 0 0 10px rgba(202,163,75,.12),0 0 0 22px rgba(18,48,63,.06); animation:liveGlow 1.6s ease-in-out infinite;}
+@keyframes liveGlow{50%{transform:scale(1.06);}}
+.live-status-text{font-size:14.5px; font-weight:800; color:var(--navy);}
+.live-transcript{width:100%; max-height:220px; overflow:auto; display:flex; flex-direction:column; gap:4px;}
 
 footer.note{max-width:1180px; margin:0 auto; padding:0 24px 50px; color:var(--muted); font-size:12.5px; text-align:center;}
 </style>
@@ -185,6 +190,7 @@ footer.note{max-width:1180px; margin:0 auto; padding:0 24px 50px; color:var(--mu
           <div class="chat-box" id="chatBox"></div>
           <div class="voice-toggle-row">
             <button class="btn light sm" id="btnToggleVoice" type="button">🎙️ وضع صوتي</button>
+            <button class="btn gold sm" id="btnStartLive" type="button">🔴 محادثة صوتية حية</button>
             <span class="voice-status" id="voiceModeHint"></span>
           </div>
           <div class="composer" id="textComposer">
@@ -194,6 +200,12 @@ footer.note{max-width:1180px; margin:0 auto; padding:0 24px 50px; color:var(--mu
           <div class="voice-composer hidden" id="voiceComposer">
             <button class="mic-btn" id="btnMic" type="button">🎙️</button>
             <div class="voice-status-text" id="voiceStatusText">اضغط للتسجيل، واضغط ثانية لإيقافه وإرساله</div>
+          </div>
+          <div class="live-panel hidden" id="livePanel">
+            <div class="live-orb" id="liveOrb">🎙️</div>
+            <div class="live-status-text" id="liveStatusText">جاري الاتصال...</div>
+            <div class="live-transcript" id="liveTranscript"></div>
+            <button class="btn light" id="btnEndLive" type="button">■ إنهاء المحادثة</button>
           </div>
           <div class="section-controls">
             <button class="btn light sm" id="btnPrevSection" type="button">◂ القسم السابق</button>
@@ -611,6 +623,8 @@ function setVoiceStatus(text){
 }
 
 function applyVoiceModeUI(){
+  const livePanel = document.getElementById("livePanel");
+  if(livePanel && !livePanel.classList.contains("hidden")) return;
   document.getElementById("textComposer").classList.toggle("hidden", state.voiceMode);
   document.getElementById("voiceComposer").classList.toggle("hidden", !state.voiceMode);
   document.getElementById("btnToggleVoice").textContent = state.voiceMode ? "⌨️ وضع نصي" : "🎙️ وضع صوتي";
@@ -728,6 +742,300 @@ document.getElementById("btnMic").addEventListener("click", async ()=>{
   btn.classList.remove("busy");
   voiceBusy = false;
 });
+
+/* ===================== Live voice (Gemini Live API) ===================== */
+let liveWs = null;
+let liveAudioCtx = null;
+let livePlaybackCtx = null;
+let liveWorkletNode = null;
+let liveMicStream = null;
+let livePlayCursor = 0;
+let liveActive = false;
+let liveSendBuffer = [];
+let liveSendBufferSamples = 0;
+
+function liveSetStatus(t){
+  const el = document.getElementById("liveStatusText");
+  if(el) el.textContent = t;
+}
+function liveAppendTranscript(role, text){
+  const box = document.getElementById("liveTranscript");
+  if(!box) return;
+  const div = document.createElement("div");
+  div.className = "bubble " + (role === "user" ? "user" : "bot");
+  div.textContent = text;
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+}
+
+function buildLiveSystemInstruction(){
+  const sectionsText = SECTIONS.map(s => "- " + s.title + ": " + s.goal).join("\n");
+  const profileSummary = JSON.stringify(state.profile);
+  return [
+    "أنت \"براندي\"، مساعد صوتي ذكي وودود، مستشار خبير في بناء البراند الشخصي والظهور الإلكتروني. تتحدث بالعربية بلهجة سعودية طبيعية ودافئة، مثل إنسان حقيقي في محادثة بودكاست، مو كأنك تقرأ استبيان.",
+    "",
+    "عن المنصة (براندي): منصة ذكاء اصطناعي تساعد المحترفين على بناء براندهم الشخصي. تجمع معلوماتهم عبر محادثة طبيعية مقسمة لأقسام، ثم ترسلها لفريق مختص يراجعها ويجهّز سيرة ذاتية احترافية، ملف تعريفي، محتوى لينكدإن بالعربي والإنجليزي، وحتى برومبتات ذكاء اصطناعي تمثّل أسلوب الشخص وتساعده ينشر محتوى مستمر. إذا سألك المستخدم أي وقت عن المنصة أو كيف تشتغل أو ليش تسأل هالسؤال، اشرح له بوضوح وبإيجاز بأسلوب ودود، وبعدها ارجع بسلاسة لأسئلة المقابلة من حيث توقفت.",
+    "",
+    "مهمتك: تمر معه على الأقسام التالية بالترتيب، سؤال أو سؤالين كل مرة، بعمق كافٍ لاستخراج أرقام وتفاصيل حقيقية:",
+    sectionsText,
+    "",
+    "تعليمات مهمة:",
+    "- بعد كل معلومة مفيدة، استخدم أداة save_profile_data فورًا لحفظها، محددًا section_id الصحيح (s1 إلى s14) وpatch بمفاتيح عربية واضحة.",
+    "- إذا اكتمل قسم، استخدم أداة mark_section_complete مع section_id.",
+    "- لا تكرر سؤال معلومة محفوظة مسبقًا إلا للتعميق أو التأكيد.",
+    "- خذ وقتك، لا تستعجل، واحكِ بأسلوب طبيعي متفاعل مع تعليقات قصيرة ودودة بين فترة وأخرى.",
+    "- إذا طلب المستخدم إنهاء الجلسة أو قال وداعًا، ودّعه بلطف.",
+    "",
+    "البيانات المحفوظة حتى الآن (للسياق فقط، لا تطلب تكرار جمعها):",
+    profileSummary
+  ].join("\n");
+}
+
+const LIVE_TOOLS = [{
+  functionDeclarations: [
+    {
+      name: "save_profile_data",
+      description: "حفظ معلومات مستخرجة من المحادثة في قسم معيّن من ملف العميل.",
+      parameters: {
+        type: "object",
+        properties: {
+          section_id: { type: "string", description: "معرف القسم مثل s1, s2, s3..." },
+          patch: { type: "object", description: "كائن JSON بالحقول والقيم المستخرجة" }
+        },
+        required: ["section_id", "patch"]
+      }
+    },
+    {
+      name: "mark_section_complete",
+      description: "استخدمها عند اكتمال قسم معيّن بشكل كافٍ.",
+      parameters: {
+        type: "object",
+        properties: { section_id: { type: "string" } },
+        required: ["section_id"]
+      }
+    }
+  ]
+}];
+
+function liveHandleToolCall(name, args){
+  if(name === "save_profile_data"){
+    const sid = args.section_id;
+    if(sid){
+      state.profile[sid] = deepMerge(state.profile[sid] || {}, args.patch || {});
+      save();
+      if(state.stage === "intake") renderProfilePanel();
+    }
+    return "saved";
+  }
+  if(name === "mark_section_complete"){
+    const sid = args.section_id;
+    if(sid){
+      state.sectionReady[sid] = true;
+      save();
+      if(state.stage === "intake") renderSectionNav();
+    }
+    return "marked";
+  }
+  return "ok";
+}
+
+const CAPTURE_WORKLET_CODE = `
+class CaptureProcessor extends AudioWorkletProcessor {
+  process(inputs){
+    const input = inputs[0];
+    if(input && input[0]){
+      const ch = input[0];
+      const int16 = new Int16Array(ch.length);
+      for(let i=0;i<ch.length;i++){
+        let s = Math.max(-1, Math.min(1, ch[i]));
+        int16[i] = s < 0 ? s*0x8000 : s*0x7FFF;
+      }
+      this.port.postMessage(int16.buffer, [int16.buffer]);
+    }
+    return true;
+  }
+}
+registerProcessor('capture-processor', CaptureProcessor);
+`;
+
+function int16ToBase64(int16arr){
+  const bytes = new Uint8Array(int16arr.buffer);
+  let binary = "";
+  for(let i=0;i<bytes.length;i++) binary += String.fromCharCode(bytes[i]);
+  return btoa(binary);
+}
+function base64ToInt16(b64){
+  const binary = atob(b64);
+  const bytes = new Uint8Array(binary.length);
+  for(let i=0;i<binary.length;i++) bytes[i] = binary.charCodeAt(i);
+  return new Int16Array(bytes.buffer);
+}
+
+async function startLiveSession(){
+  if(liveActive) return;
+  const panel = document.getElementById("livePanel");
+  panel.classList.remove("hidden");
+  document.getElementById("textComposer").classList.add("hidden");
+  document.getElementById("voiceComposer").classList.add("hidden");
+  document.getElementById("liveTranscript").innerHTML = "";
+  liveSetStatus("جاري الاتصال...");
+
+  let token;
+  try{
+    const tokRes = await fetch("/api/gemini-live-token", {method:"POST", headers:{"content-type":"application/json"}, body:"{}"});
+    const tokData = await tokRes.json();
+    if(!tokRes.ok) throw new Error(JSON.stringify(tokData.error || tokData));
+    token = tokData.token;
+  }catch(err){
+    liveSetStatus("⚠️ تعذّر الحصول على إذن الاتصال: " + err.message);
+    return;
+  }
+
+  try{
+    liveMicStream = await navigator.mediaDevices.getUserMedia({audio:{channelCount:1, sampleRate:16000}});
+  }catch(err){
+    liveSetStatus("⚠️ تعذّر الوصول للميكروفون: " + err.message);
+    panel.classList.add("hidden");
+    return;
+  }
+
+  liveWs = new WebSocket("wss://generativelanguage.googleapis.com/ws/google.ai.generativelanguage.v1beta.GenerativeService.BidiGenerateContentConstrained?access_token=" + encodeURIComponent(token));
+
+  liveWs.onopen = () => {
+    liveWs.send(JSON.stringify({
+      setup: {
+        model: "models/gemini-3.8-live",
+        generationConfig: {
+          responseModalities: ["AUDIO"],
+          speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName: "Kore" } } }
+        },
+        systemInstruction: { parts: [{ text: buildLiveSystemInstruction() }] },
+        tools: LIVE_TOOLS,
+        inputAudioTranscription: {},
+        outputAudioTranscription: {}
+      }
+    }));
+  };
+
+  liveWs.onmessage = async (ev) => {
+    const text = ev.data instanceof Blob ? await ev.data.text() : ev.data;
+    let obj;
+    try{ obj = JSON.parse(text); }catch(e){ return; }
+
+    if(obj.setupComplete){
+      liveActive = true;
+      liveSetStatus("🎙️ أسمعك الآن...");
+      await initLiveAudioCapture();
+      return;
+    }
+    if(obj.toolCall){
+      for(const fc of obj.toolCall.functionCalls){
+        const result = liveHandleToolCall(fc.name, fc.args);
+        liveWs.send(JSON.stringify({ toolResponse: { functionResponses: [{ name: fc.name, id: fc.id, response: { result } }] } }));
+      }
+    }
+    if(obj.serverContent){
+      if(obj.serverContent.interrupted){
+        stopLivePlayback();
+      }
+      if(obj.serverContent.inputTranscription && obj.serverContent.inputTranscription.text){
+        liveAppendTranscript("user", obj.serverContent.inputTranscription.text);
+      }
+      if(obj.serverContent.outputTranscription && obj.serverContent.outputTranscription.text){
+        liveAppendTranscript("bot", obj.serverContent.outputTranscription.text);
+      }
+      const parts = (obj.serverContent.modelTurn && obj.serverContent.modelTurn.parts) || [];
+      for(const p of parts){
+        if(p.inlineData && p.inlineData.data){
+          liveSetStatus("🔊 براندي يتكلم...");
+          playLiveAudioChunk(p.inlineData.data);
+        }
+      }
+      if(obj.serverContent.turnComplete){
+        liveSetStatus("🎙️ أسمعك الآن...");
+      }
+    }
+  };
+
+  liveWs.onerror = () => { liveSetStatus("⚠️ خطأ في الاتصال"); };
+  liveWs.onclose = (e) => {
+    liveActive = false;
+    liveSetStatus("تم إنهاء المحادثة" + (e.reason ? (" — " + e.reason) : ""));
+    cleanupLiveAudio();
+  };
+}
+
+async function initLiveAudioCapture(){
+  liveAudioCtx = new (window.AudioContext || window.webkitAudioContext)({sampleRate:16000});
+  const blob = new Blob([CAPTURE_WORKLET_CODE], {type:"application/javascript"});
+  const workletUrl = URL.createObjectURL(blob);
+  await liveAudioCtx.audioWorklet.addModule(workletUrl);
+  const source = liveAudioCtx.createMediaStreamSource(liveMicStream);
+  liveWorkletNode = new AudioWorkletNode(liveAudioCtx, "capture-processor");
+  liveSendBuffer = [];
+  liveSendBufferSamples = 0;
+  liveWorkletNode.port.onmessage = (ev) => {
+    if(!liveActive || !liveWs || liveWs.readyState !== 1) return;
+    const int16 = new Int16Array(ev.data);
+    liveSendBuffer.push(int16);
+    liveSendBufferSamples += int16.length;
+    if(liveSendBufferSamples >= 1600){
+      const merged = new Int16Array(liveSendBufferSamples);
+      let off = 0;
+      for(const chunk of liveSendBuffer){ merged.set(chunk, off); off += chunk.length; }
+      liveSendBuffer = [];
+      liveSendBufferSamples = 0;
+      liveWs.send(JSON.stringify({
+        realtimeInput: { audio: { data: int16ToBase64(merged), mimeType: "audio/pcm;rate=16000" } }
+      }));
+    }
+  };
+  source.connect(liveWorkletNode);
+}
+
+function stopLivePlayback(){
+  if(livePlaybackCtx){
+    livePlaybackCtx.close().catch(()=>{});
+    livePlaybackCtx = null;
+  }
+  livePlayCursor = 0;
+}
+
+function playLiveAudioChunk(base64){
+  if(!livePlaybackCtx){
+    livePlaybackCtx = new (window.AudioContext || window.webkitAudioContext)({sampleRate:24000});
+    livePlayCursor = livePlaybackCtx.currentTime;
+  }
+  const int16 = base64ToInt16(base64);
+  const float32 = new Float32Array(int16.length);
+  for(let i=0;i<int16.length;i++) float32[i] = int16[i] / 0x8000;
+  const buffer = livePlaybackCtx.createBuffer(1, float32.length, 24000);
+  buffer.getChannelData(0).set(float32);
+  const srcNode = livePlaybackCtx.createBufferSource();
+  srcNode.buffer = buffer;
+  srcNode.connect(livePlaybackCtx.destination);
+  const startAt = Math.max(livePlayCursor, livePlaybackCtx.currentTime);
+  srcNode.start(startAt);
+  livePlayCursor = startAt + buffer.duration;
+}
+
+function cleanupLiveAudio(){
+  if(liveWorkletNode){ try{ liveWorkletNode.disconnect(); }catch(e){} liveWorkletNode = null; }
+  if(liveAudioCtx){ liveAudioCtx.close().catch(()=>{}); liveAudioCtx = null; }
+  if(liveMicStream){ liveMicStream.getTracks().forEach(t=>t.stop()); liveMicStream = null; }
+  stopLivePlayback();
+}
+
+function endLiveSession(){
+  if(liveWs){ try{ liveWs.close(); }catch(e){} liveWs = null; }
+  liveActive = false;
+  cleanupLiveAudio();
+  document.getElementById("livePanel").classList.add("hidden");
+  applyVoiceModeUI();
+}
+
+document.getElementById("btnStartLive").addEventListener("click", startLiveSession);
+document.getElementById("btnEndLive").addEventListener("click", endLiveSession);
 
 /* ===================== Boot ===================== */
 render();
