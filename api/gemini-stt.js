@@ -1,3 +1,5 @@
+const { fetchWithRetry } = require("./_lib/gemini");
+
 module.exports = async (req, res) => {
   if (req.method !== "POST") {
     res.status(405).json({ error: "Method not allowed" });
@@ -17,7 +19,7 @@ module.exports = async (req, res) => {
     }
     const model = process.env.GEMINI_STT_MODEL || "gemini-3.8-flash";
 
-    const r = await fetch(
+    const r = await fetchWithRetry(
       "https://generativelanguage.googleapis.com/v1beta/models/" + model + ":generateContent?key=" + process.env.GEMINI_API_KEY,
       {
         method: "POST",
