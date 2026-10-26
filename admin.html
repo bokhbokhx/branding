@@ -1,0 +1,573 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>لوحة المختص | براندي</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;700;800&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#12303f; --navy2:#1c4152; --gold:#caa34b; --gold-soft:#f1d078;
+  --bg:#f4f6f7; --card:#ffffff; --line:#dbe4e7; --text:#17252d; --muted:#67757d;
+  --danger:#b53c3c; --ok:#2e8b57;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--bg);color:var(--text);font-family:'Tajawal',Arial,sans-serif;line-height:1.7;}
+h1,h2,h3,.brand-font{font-family:'Cairo',sans-serif;}
+button,input,textarea,select{font-family:inherit;}
+.screen{display:none;}
+.screen.active{display:block;}
+.hidden{display:none !important;}
+
+#topbar{
+  position:sticky; top:0; z-index:50; background:var(--navy); color:#fff;
+  display:flex; align-items:center; justify-content:space-between; padding:10px 20px;
+}
+#topbar .logo{font-family:'Cairo',sans-serif; font-weight:800; color:var(--gold-soft); letter-spacing:2px; font-size:16px;}
+#topbar button{background:rgba(255,255,255,.12); color:#fff; border:1px solid rgba(255,255,255,.25); border-radius:8px; padding:6px 10px; font-size:12.5px; cursor:pointer;}
+
+.wrap{max-width:1100px; margin:0 auto; padding:30px 24px 70px;}
+.btn{border:0; border-radius:10px; padding:12px 20px; font-weight:800; cursor:pointer; font-size:14.5px;}
+.btn.primary{background:var(--navy); color:#fff;}
+.btn.gold{background:var(--gold); color:var(--navy);}
+.btn.light{background:#eaf0f2; color:var(--navy);}
+.btn:disabled{opacity:.5; cursor:not-allowed;}
+.btn.sm{padding:7px 13px; font-size:13px; border-radius:8px;}
+.btn.wide{width:100%;}
+
+.card{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:22px; margin-bottom:16px;}
+label{display:block; font-weight:700; font-size:13.5px; color:var(--navy); margin:0 0 6px;}
+input, textarea, select{width:100%; border:1px solid #cfd8dd; border-radius:10px; padding:10px 12px; font-size:14px;}
+textarea{min-height:70px; resize:vertical;}
+.field{margin-bottom:14px;}
+.hint{color:var(--muted); font-size:13.5px;}
+
+.login-box{max-width:380px; margin:90px auto;}
+.login-box .logo-big{font-family:'Cairo',sans-serif; font-weight:800; color:var(--navy); text-align:center; letter-spacing:4px; font-size:30px;}
+
+.list-row{display:flex; align-items:center; justify-content:space-between; border:1px solid var(--line); border-radius:12px; padding:14px 16px; margin-bottom:10px; cursor:pointer; background:#fff;}
+.list-row:hover{border-color:var(--gold);}
+.badge{font-size:12px; font-weight:800; padding:4px 10px; border-radius:100px;}
+.badge.new{background:#fde9e9; color:#7a2020;}
+.badge.analyzed{background:#fff4da; color:#7a5b16;}
+.badge.approved{background:#e4f3ea; color:#1f6b40;}
+.badge.scheduled{background:#e6eef7; color:#1d4e89;}
+.badge.completed{background:#eef0ff; color:#3a3a8c;}
+
+.sec-card{border:1px solid var(--line); border-radius:10px; padding:10px 12px; margin-bottom:8px; font-size:13px;}
+.sec-card b{display:block; color:var(--navy); font-size:12.5px; margin-bottom:3px;}
+
+.gate-banner{background:var(--navy); color:#fff; border-radius:12px; padding:12px 16px; margin-bottom:16px; font-weight:700;}
+.sched-grid{display:grid; grid-template-columns:1fr 1fr; gap:0 16px;}
+@media (max-width:700px){.sched-grid{grid-template-columns:1fr;}}
+
+.tabs{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px;}
+.tabs button{border:1px solid var(--line); background:#fff; padding:9px 14px; border-radius:100px; font-weight:700; font-size:13px; cursor:pointer; color:var(--navy);}
+.tabs button.active{background:var(--navy); color:#fff; border-color:var(--navy);}
+.deliv-pane{display:none;}
+.deliv-pane.active{display:block;}
+.lang-toggle{display:flex; gap:6px; margin-bottom:10px;}
+.lang-toggle button{border:1px solid var(--line); background:#fff; padding:6px 14px; border-radius:100px; font-size:13px; cursor:pointer;}
+.lang-toggle button.active{background:var(--gold); color:var(--navy); border-color:var(--gold); font-weight:800;}
+.output-box{width:100%; min-height:320px; border:1px solid var(--line); border-radius:12px; padding:14px; font-size:13.5px; line-height:1.8; white-space:pre-wrap; background:#fcfdfd;}
+.toolbar{display:flex; gap:8px; margin-top:8px; flex-wrap:wrap;}
+.empty-state{color:var(--muted); text-align:center; padding:30px 10px;}
+.spinner{width:36px; height:36px; border-radius:50%; border:4px solid var(--line); border-top-color:var(--gold); margin:10px auto; animation:spin 1s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+</style>
+</head>
+<body>
+
+<div id="topbar">
+  <div class="logo">BRANDY — لوحة المختص</div>
+  <button id="btnLogout" type="button" class="hidden">خروج</button>
+</div>
+
+<div id="app">
+  <section id="screen-login" class="screen active">
+    <div class="wrap">
+      <div class="login-box card">
+        <div class="logo-big">BRANDY</div>
+        <p class="hint" style="text-align:center; margin-bottom:18px;">دخول المختص</p>
+        <div class="field">
+          <label for="pwInput">كلمة المرور</label>
+          <input type="password" id="pwInput">
+        </div>
+        <div id="loginError" class="hint" style="color:var(--danger); display:none; margin-bottom:10px;"></div>
+        <button class="btn gold wide" id="btnLogin" type="button">دخول</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="screen-dashboard" class="screen">
+    <div class="wrap">
+      <h1>طلبات العملاء</h1>
+      <div style="margin-bottom:14px;"><button class="btn light sm" id="btnRefresh" type="button">تحديث القائمة</button></div>
+      <div id="listBox"></div>
+    </div>
+  </section>
+
+  <section id="screen-detail" class="screen">
+    <div class="wrap">
+      <button class="btn light sm" id="btnBack" type="button" style="margin-bottom:14px;">◂ رجوع للقائمة</button>
+
+      <div class="card">
+        <h2>بيانات العميل</h2>
+        <div id="profileView"></div>
+      </div>
+
+      <div class="gate-banner">🔒 التحليل والمخرجات أدناه — مراجعتك قبل أي تواصل مع العميل</div>
+
+      <div class="card">
+        <h2>التحليل الاستراتيجي ومقترحات بناء البراند</h2>
+        <div id="analysisLoading" class="hidden"><div class="spinner"></div></div>
+        <textarea id="analysisBox" class="output-box" style="min-height:360px;"></textarea>
+        <div class="toolbar">
+          <button class="btn light sm" id="btnRegenAnalysis" type="button">توليد / إعادة توليد التحليل</button>
+          <button class="btn light sm" id="btnSaveAnalysis" type="button">حفظ النص</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <label for="specialistNotes">ملاحظاتك الخاصة</label>
+        <textarea id="specialistNotes"></textarea>
+        <div class="toolbar">
+          <button class="btn gold sm" id="btnApprove" type="button">اعتماد التحليل</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>موعد العرض مع العميل</h2>
+        <div class="sched-grid">
+          <div class="field"><label for="mDate">التاريخ</label><input type="date" id="mDate"></div>
+          <div class="field"><label for="mTime">الوقت</label><input type="time" id="mTime"></div>
+          <div class="field"><label for="mMode">طريقة الجلسة</label>
+            <select id="mMode"><option value="حضوري">حضوري</option><option value="عن بعد">عن بعد</option></select>
+          </div>
+          <div class="field"><label for="mPlace">المكان / رابط الاتصال</label><input type="text" id="mPlace"></div>
+        </div>
+        <div class="field"><label for="mNotes">نقاط تحضيرية</label><textarea id="mNotes"></textarea></div>
+        <div class="toolbar">
+          <button class="btn light sm" id="btnSaveMeeting" type="button">حفظ الموعد</button>
+          <button class="btn light sm" id="btnExportIcs" type="button">تصدير دعوة (.ics)</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>المخرجات النهائية</h2>
+        <div class="tabs" id="delivTabs"></div>
+        <div id="delivPanes"></div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+const API_BASE = "";
+const SECTION_LABELS = [
+  {id:"s1", title:"الهوية الأساسية والهوية البصرية"},
+  {id:"s2", title:"لمحة سريعة بالأرقام"},
+  {id:"s3", title:"المسار المهني"},
+  {id:"s4", title:"التعليم"},
+  {id:"s5", title:"التطوع والعمل المجتمعي"},
+  {id:"s6", title:"العضويات والشهادات والمهارات والورش"},
+  {id:"s7", title:"المقابلات والمشاركات الإعلامية"},
+  {id:"s8", title:"المشاريع والأعمال (Portfolio)"},
+  {id:"s9", title:"الشخصية والسلوك"},
+  {id:"s10", title:"التموضع والأهداف"},
+  {id:"s11", title:"تحليل الذات (SWOT)"},
+  {id:"s12", title:"عوامل التميز والقصص الشخصية"},
+  {id:"s13", title:"الحضور الرقمي وحسابات التواصل"},
+  {id:"s14", title:"بيانات تكميلية أخيرة"}
+];
+const DELIVERABLES = [
+  {id:"cv", label:"السيرة الذاتية", bilingual:true},
+  {id:"profile_doc", label:"الملف التعريفي", bilingual:true},
+  {id:"linkedin", label:"LinkedIn", bilingual:true},
+  {id:"persona", label:"برومبت الشخصية للذكاء الاصطناعي", bilingual:false},
+  {id:"content_prompts", label:"برومبتات المحتوى والمتابعة", bilingual:false}
+];
+const STATUS_LABEL = {new:"جديد", analyzed:"تم التحليل", approved:"معتمد", scheduled:"مجدول", completed:"مكتمل"};
+
+let token = localStorage.getItem("brandy_admin_token") || "";
+let list = [];
+let current = null;
+let activeDelivTab = "cv";
+let delivLang = {cv:"ar", profile_doc:"ar", linkedin:"ar"};
+
+function show(id){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  document.getElementById("btnLogout").classList.toggle("hidden", id==="screen-login");
+}
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+function extractText(resp){
+  return (resp.content||[]).filter(b=>b.type==="text").map(b=>b.text).join("\n\n").trim();
+}
+function splitAREN(text){
+  const arIdx = text.indexOf("<<<AR>>>");
+  const enIdx = text.indexOf("<<<EN>>>");
+  if(arIdx===-1 || enIdx===-1) return {ar:text, en:""};
+  return {
+    ar: text.slice(arIdx+8, enIdx<arIdx?text.length:enIdx).trim(),
+    en: enIdx>-1 ? text.slice(enIdx+8).trim() : ""
+  };
+}
+function download(filename, text){
+  const blob = new Blob([text], {type:"text/plain;charset=utf-8"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove();
+}
+
+async function api(path, opts){
+  opts = opts || {};
+  const headers = Object.assign({"content-type":"application/json"}, opts.headers||{});
+  if(token) headers["authorization"] = "Bearer " + token;
+  const res = await fetch(API_BASE + path, Object.assign({}, opts, {headers}));
+  if(res.status === 401){
+    logout();
+    throw new Error("انتهت الجلسة، سجّل دخول مرة أخرى.");
+  }
+  if(!res.ok){
+    let msg = res.status;
+    try{ const j = await res.json(); msg = JSON.stringify(j.error || j); }catch(e){}
+    throw new Error("خطأ (" + res.status + "): " + msg);
+  }
+  return res.json();
+}
+
+async function anthropicMessages({system, messages, max_tokens=4096}){
+  const res = await fetch("/api/anthropic", {
+    method:"POST",
+    headers:{"content-type":"application/json"},
+    body: JSON.stringify({system, messages, max_tokens})
+  });
+  if(!res.ok){
+    let msg = res.status;
+    try{ const j = await res.json(); msg = JSON.stringify(j.error || j); }catch(e){}
+    throw new Error("خطأ من الخادم (" + res.status + "): " + msg);
+  }
+  return res.json();
+}
+
+function logout(){
+  token = "";
+  try{ localStorage.removeItem("brandy_admin_token"); }catch(e){}
+  show("screen-login");
+}
+
+document.getElementById("btnLogin").addEventListener("click", async ()=>{
+  const pw = document.getElementById("pwInput").value;
+  const errBox = document.getElementById("loginError");
+  errBox.style.display = "none";
+  try{
+    const res = await fetch("/api/admin-login", {
+      method:"POST", headers:{"content-type":"application/json"}, body: JSON.stringify({password: pw})
+    });
+    const data = await res.json();
+    if(!res.ok) throw new Error(data.error || ("HTTP " + res.status));
+    token = data.token;
+    localStorage.setItem("brandy_admin_token", token);
+    await loadDashboard();
+  }catch(err){
+    errBox.textContent = err.message;
+    errBox.style.display = "block";
+  }
+});
+document.getElementById("btnLogout").addEventListener("click", logout);
+
+async function loadDashboard(){
+  show("screen-dashboard");
+  const box = document.getElementById("listBox");
+  box.innerHTML = "<div class='spinner'></div>";
+  try{
+    const data = await api("/api/submissions", {method:"GET"});
+    list = data.items || [];
+    renderList();
+  }catch(err){
+    box.innerHTML = "<p class='hint' style='color:var(--danger)'>" + escapeHtml(err.message) + "</p>";
+  }
+}
+document.getElementById("btnRefresh").addEventListener("click", loadDashboard);
+document.getElementById("btnBack").addEventListener("click", loadDashboard);
+
+function renderList(){
+  const box = document.getElementById("listBox");
+  if(list.length===0){ box.innerHTML = "<p class='hint'>لا يوجد طلبات بعد.</p>"; return; }
+  box.innerHTML = list.map(item=>{
+    const d = new Date(item.createdAt);
+    const status = item.status || "new";
+    return `<div class="list-row" data-id="${item.id}">
+      <div>
+        <b>طلب #${item.id.slice(0,8)}</b>
+        <div class="hint">${d.toLocaleString("ar")}</div>
+      </div>
+      <span class="badge ${status}">${STATUS_LABEL[status] || status}</span>
+    </div>`;
+  }).join("");
+  box.querySelectorAll(".list-row").forEach(row=>{
+    row.addEventListener("click", ()=> openSubmission(row.dataset.id));
+  });
+}
+
+async function openSubmission(id){
+  show("screen-detail");
+  document.getElementById("profileView").innerHTML = "<div class='spinner'></div>";
+  try{
+    current = await api("/api/submission?id=" + encodeURIComponent(id), {method:"GET"});
+  }catch(err){
+    alert(err.message);
+    loadDashboard();
+    return;
+  }
+  renderDetail();
+  if(!current.analysis){
+    await generateAnalysis();
+  }
+}
+
+function renderDetail(){
+  const pv = document.getElementById("profileView");
+  let html = "";
+  const hw = current.homework || {};
+  html += `<div class="sec-card"><b>الهدف من البراند</b>${escapeHtml(hw.goal||"-")}</div>`;
+  html += `<div class="sec-card"><b>رؤيته بعد سنتين</b>${escapeHtml(hw.vision||"-")}</div>`;
+  html += `<div class="sec-card"><b>أفكار مسبقة</b>${escapeHtml(hw.ideas||"-")}</div>`;
+  SECTION_LABELS.forEach(s=>{
+    const data = (current.profile||{})[s.id];
+    if(data && Object.keys(data).length){
+      html += `<div class="sec-card"><b>${escapeHtml(s.title)}</b>${escapeHtml(JSON.stringify(data, null, 1))}</div>`;
+    }
+  });
+  pv.innerHTML = html || "<p class='hint'>لا بيانات.</p>";
+
+  document.getElementById("analysisBox").value = current.analysis || "";
+  document.getElementById("specialistNotes").value = current.specialistNotes || "";
+  const m = current.meeting || {};
+  document.getElementById("mDate").value = m.date || "";
+  document.getElementById("mTime").value = m.time || "";
+  document.getElementById("mMode").value = m.mode || "حضوري";
+  document.getElementById("mPlace").value = m.place || "";
+  document.getElementById("mNotes").value = m.notes || "";
+
+  renderDeliverables();
+}
+
+async function patchCurrent(patch){
+  current = await api("/api/submission?id=" + encodeURIComponent(current.id), {
+    method:"PATCH", body: JSON.stringify(patch)
+  });
+}
+
+const ANALYSIS_SYSTEM = [
+  "أنت خبير استراتيجي في البراند الشخصي والظهور الإلكتروني.",
+  "بناءً على بيانات العميل الكاملة المرفقة (JSON)، قدّم تحليلًا استراتيجيًا ومقترحات موجّهة لمختص البراند (وليس للعميل مباشرة) ليراجعها قبل عرضها على العميل.",
+  "اكتب بصيغة Markdown بالعناوين التالية بالضبط:",
+  "## ملخص الشخصية والمسار",
+  "## نقاط القوة الجوهرية",
+  "## التموضع المقترح (Positioning Statement)",
+  "## الهوية البصرية المقترحة",
+  "## السردية الرئيسية وقصص الإثبات",
+  "## فجوات تحتاج توضيحًا أكثر من العميل",
+  "## أسئلة يُفضّل مناقشتها مع العميل في جلسة العرض",
+  "## توصيات عملية للمخرجات النهائية"
+].join("\n");
+
+async function generateAnalysis(){
+  document.getElementById("analysisLoading").classList.remove("hidden");
+  try{
+    const payload = {homework: current.homework, profile: current.profile};
+    const resp = await anthropicMessages({system: ANALYSIS_SYSTEM, messages:[{role:"user", content:[{type:"text", text:JSON.stringify(payload, null, 2)}]}]});
+    const text = extractText(resp);
+    document.getElementById("analysisBox").value = text;
+    await patchCurrent({analysis: text, status: "analyzed"});
+  }catch(err){
+    document.getElementById("analysisBox").value = "⚠️ تعذّر توليد التحليل: " + err.message;
+  }
+  document.getElementById("analysisLoading").classList.add("hidden");
+}
+document.getElementById("btnRegenAnalysis").addEventListener("click", generateAnalysis);
+document.getElementById("btnSaveAnalysis").addEventListener("click", async ()=>{
+  await patchCurrent({analysis: document.getElementById("analysisBox").value});
+  alert("تم الحفظ.");
+});
+document.getElementById("specialistNotes").addEventListener("change", async (e)=>{
+  await patchCurrent({specialistNotes: e.target.value});
+});
+document.getElementById("btnApprove").addEventListener("click", async ()=>{
+  await patchCurrent({approved:true, status:"approved", specialistNotes: document.getElementById("specialistNotes").value});
+  alert("تم اعتماد التحليل.");
+  renderDetail();
+});
+
+["mDate","mTime","mMode","mPlace","mNotes"].forEach(id=>{});
+document.getElementById("btnSaveMeeting").addEventListener("click", async ()=>{
+  const meeting = {
+    date: document.getElementById("mDate").value,
+    time: document.getElementById("mTime").value,
+    mode: document.getElementById("mMode").value,
+    place: document.getElementById("mPlace").value,
+    notes: document.getElementById("mNotes").value
+  };
+  await patchCurrent({meeting, status: meeting.date ? "scheduled" : current.status});
+  alert("تم حفظ الموعد.");
+  renderDetail();
+});
+document.getElementById("btnExportIcs").addEventListener("click", ()=>{
+  const m = current.meeting || {};
+  if(!m.date){ alert("حدد تاريخ الجلسة أولاً."); return; }
+  const dt = (m.date.replace(/-/g,"")) + "T" + ((m.time||"10:00").replace(":","")+"00");
+  const ics = [
+    "BEGIN:VCALENDAR","VERSION:2.0","BEGIN:VEVENT",
+    "SUMMARY:جلسة عرض ومناقشة البراند الشخصي",
+    "DTSTART:"+dt,
+    "LOCATION:"+(m.place||""),
+    "DESCRIPTION:"+(m.notes||"").replace(/\n/g,"\\n"),
+    "END:VEVENT","END:VCALENDAR"
+  ].join("\r\n");
+  download("brandy-meeting.ics", ics);
+});
+
+const DELIV_PROMPTS = {
+  cv: ()=>[
+    "أنت كاتب سيَر ذاتية محترف متخصص في البراند الشخصي.",
+    "بناءً على البيانات المرفقة (JSON)، اكتب سيرة ذاتية كاملة ومرتبة بصياغة قوية مرتكزة على الأرقام والنتائج.",
+    "اكتب نسختين متكاملتين مفصولتين بوضوح بالضبط بهذا الشكل:",
+    "<<<AR>>>",
+    "(السيرة الذاتية بالعربية الفصحى، Markdown بعناوين ##: نظرة عامة، الخبرات المهنية، التعليم، الشهادات، المهارات، التطوع، اللغات)",
+    "<<<EN>>>",
+    "(same CV translated and localized naturally into professional English, same structure)"
+  ].join("\n"),
+  profile_doc: ()=>[
+    "أنت خبير في كتابة الملفات التعريفية والسرديات الشخصية (Brand Profile) وليس السير الذاتية الجافة.",
+    "بناءً على البيانات المرفقة، اكتب: نبذة مختصرة جدًا (25-30 كلمة)، نبذة متوسطة (100-150 كلمة)، نبذة طويلة (250-350 كلمة)، أبرز الإنجازات (Highlights) كقائمة نقطية، وجملة تموضع (Positioning Statement).",
+    "اكتب نسختين بالضبط بهذا الشكل:",
+    "<<<AR>>>","(بالعربية)","<<<EN>>>","(in English)"
+  ].join("\n"),
+  linkedin: ()=>[
+    "أنت خبير في بناء ملفات LinkedIn الشخصية.",
+    "بناءً على البيانات المرفقة، اكتب: Headline مختصر وقوي تحت الاسم، قسم About (3-5 فقرات بصيغة الشخص الأول)، Featured/أبرز الإنجازات (4-6 نقاط)، وThree bullet points بالأرقام لكل وظيفة رئيسية في مساره المهني.",
+    "اكتب نسختين بالضبط بهذا الشكل:",
+    "<<<AR>>>","(بالعربية)","<<<EN>>>","(in English)"
+  ].join("\n"),
+  persona: ()=>[
+    "اكتب System Prompt متكامل يصف هذا الشخص بالكامل لأي مساعد ذكاء اصطناعي يُستخدم بالنيابة عنه أو لتوليد محتوى بأسلوبه.",
+    "يجب أن يشمل: من هو باختصار، أسلوبه في الحديث والكتابة (نغمة، طول الجمل، درجة الرسمية)، قيمه ومبادئه، مجالات خبرته وقوته الحقيقية، الطريقة التي يحب أن يتحدث بها عن نفسه، أمثلة من قصصه وعباراته المفضلة، وتعليمات صريحة لـ'افعل' و'لا تفعل' عند الكتابة بأسلوبه.",
+    "اكتبه بصيغة تعليمات مباشرة موجهة للنموذج (أنت / You are...) بحيث يمكن نسخه ولصقه كـ System Prompt جاهز للاستخدام فورًا.",
+    "اكتب بلغته الأساسية، وأضف في النهاية ملاحظة قصيرة بالإنجليزية لاستخدامه مع نموذج يكتب بالإنجليزية."
+  ].join("\n"),
+  content_prompts: ()=>[
+    "جهّز 3 برومبتات عملية جاهزة للاستخدام الفوري لمساعدة هذا الشخص على متابعة مجاله وصناعة محتوى مستمر، مخصصة بتفاصيله الفعلية (لا تتركها عامة):",
+    "## برومبت 1: تتبع الأخبار والمستجدات",
+    "(برومبت يُستخدم بشكل دوري أسبوعي مع أداة بحث/ذكاء اصطناعي لجلب آخر الأخبار والنقاط المرتبطة بمجالات قوته وتموضعه بالتحديد)",
+    "## برومبت 2: تحويل خبر إلى منشور بأسلوبه",
+    "(برومبت يأخذ خبرًا أو نقطة ويحولها لمنشور LinkedIn/X بأسلوبه الشخصي، بشكل محايد ومهني ومواكب للسوق)",
+    "## برومبت 3: خطة محتوى أسبوعية",
+    "(برومبت يولّد 3-5 أفكار منشورات أسبوعيًا متوافقة مع تموضعه وأهدافه المعلنة)"
+  ].join("\n")
+};
+
+async function generateDeliverable(id){
+  const payload = {homework: current.homework, profile: current.profile, analysis: current.analysis, specialistNotes: current.specialistNotes};
+  const sys = DELIV_PROMPTS[id]();
+  let text;
+  try{
+    const resp = await anthropicMessages({system: sys, messages:[{role:"user", content:[{type:"text", text:JSON.stringify(payload, null, 2)}]}]});
+    text = extractText(resp);
+  }catch(err){
+    text = "⚠️ تعذّر التوليد: " + err.message;
+  }
+  const deliverables = Object.assign({}, current.deliverables, {[id]: text});
+  await patchCurrent({deliverables, status: current.status==="approved"||current.status==="scheduled" ? "completed" : current.status});
+}
+
+function renderDeliverables(){
+  const tabs = document.getElementById("delivTabs");
+  tabs.innerHTML = DELIVERABLES.map(d=>`<button data-id="${d.id}" class="${activeDelivTab===d.id?'active':''}">${d.label}</button>`).join("");
+  tabs.querySelectorAll("button").forEach(b=>{
+    b.addEventListener("click", ()=>{ activeDelivTab = b.dataset.id; renderDeliverables(); });
+  });
+
+  const panes = document.getElementById("delivPanes");
+  const deliverables = current.deliverables || {};
+  panes.innerHTML = DELIVERABLES.map(d=>{
+    const active = activeDelivTab===d.id ? "active" : "";
+    let langHtml = "";
+    let content = deliverables[d.id] || "";
+    if(d.bilingual){
+      const lang = delivLang[d.id] || "ar";
+      const parts = splitAREN(content);
+      content = lang==="ar" ? (parts.ar || content) : (parts.en || "لم تُولَّد نسخة إنجليزية بعد.");
+      langHtml = `<div class="lang-toggle">
+        <button data-lang="ar" data-id="${d.id}" class="${lang==='ar'?'active':''}">AR</button>
+        <button data-lang="en" data-id="${d.id}" class="${lang==='en'?'active':''}">EN</button>
+      </div>`;
+    }
+    const empty = content.trim()==="" ? `<div class="empty-state">لم يُولَّد هذا المحتوى بعد.</div>` : "";
+    return `<div class="deliv-pane ${active}" data-pane="${d.id}">
+      ${langHtml}
+      <textarea class="output-box" data-out="${d.id}">${escapeHtml(content)}</textarea>
+      ${empty}
+      <div class="toolbar">
+        <button class="btn gold sm" data-gen="${d.id}" type="button">توليد / إعادة توليد</button>
+        <button class="btn light sm" data-copy="${d.id}" type="button">نسخ</button>
+        <button class="btn light sm" data-dl="${d.id}" type="button">تنزيل .md</button>
+      </div>
+    </div>`;
+  }).join("");
+
+  panes.querySelectorAll("[data-gen]").forEach(b=>{
+    b.addEventListener("click", async ()=>{
+      b.disabled = true; b.textContent = "جاري التوليد...";
+      await generateDeliverable(b.dataset.gen);
+      renderDeliverables();
+    });
+  });
+  panes.querySelectorAll("[data-copy]").forEach(b=>{
+    b.addEventListener("click", ()=>{
+      const ta = panes.querySelector(`textarea[data-out="${b.dataset.copy}"]`);
+      navigator.clipboard.writeText(ta.value).then(()=>{
+        const old = b.textContent; b.textContent = "تم النسخ ✓"; setTimeout(()=>b.textContent=old, 1400);
+      }).catch(()=>alert("تعذّر النسخ."));
+    });
+  });
+  panes.querySelectorAll("[data-dl]").forEach(b=>{
+    b.addEventListener("click", ()=>{
+      const ta = panes.querySelector(`textarea[data-out="${b.dataset.dl}"]`);
+      download("brandy-"+b.dataset.dl+".md", ta.value);
+    });
+  });
+  panes.querySelectorAll("[data-lang]").forEach(b=>{
+    b.addEventListener("click", ()=>{
+      delivLang[b.dataset.id] = b.dataset.lang; renderDeliverables();
+    });
+  });
+  panes.querySelectorAll("textarea[data-out]").forEach(ta=>{
+    ta.addEventListener("change", async ()=>{
+      const id = ta.dataset.out;
+      const d = DELIVERABLES.find(x=>x.id===id);
+      const deliverables = Object.assign({}, current.deliverables);
+      if(d.bilingual){
+        const lang = delivLang[id] || "ar";
+        const parts = splitAREN(deliverables[id] || "");
+        if(lang==="ar") parts.ar = ta.value; else parts.en = ta.value;
+        deliverables[id] = "<<<AR>>>\n" + (parts.ar||"") + "\n<<<EN>>>\n" + (parts.en||"");
+      }else{
+        deliverables[id] = ta.value;
+      }
+      await patchCurrent({deliverables});
+    });
+  });
+}
+
+/* ===================== Boot ===================== */
+if(token){ loadDashboard().catch(()=> show("screen-login")); }
+else{ show("screen-login"); }
+</script>
+</body>
+</html>

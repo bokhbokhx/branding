@@ -100,31 +100,11 @@ nav.toc .item .chk{margin-right:auto; font-size:11px; color:var(--ok);}
 .data-panel .empty{color:var(--muted); font-size:13px;}
 .data-panel textarea.raw{min-height:120px; font-size:12px; font-family:monospace;}
 
-/* analyzing */
+/* submitted */
 .loading-box{max-width:480px; margin:90px auto; text-align:center;}
 .spinner{width:52px; height:52px; border-radius:50%; border:5px solid var(--line); border-top-color:var(--gold); margin:0 auto 18px; animation:spin 1s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg);}}
-
-/* specialist */
-.gate-banner{background:var(--navy); color:#fff; border-radius:14px; padding:14px 18px; margin-bottom:18px; font-weight:700; display:flex; align-items:center; gap:10px;}
-.gate-banner .lock{font-size:20px;}
-
-/* scheduling */
-.sched-grid{display:grid; grid-template-columns:1fr 1fr; gap:0 18px;}
-@media (max-width:760px){.sched-grid{grid-template-columns:1fr;}}
-
-/* deliverables */
-.tabs{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px;}
-.tabs button{border:1px solid var(--line); background:#fff; padding:10px 16px; border-radius:100px; font-weight:700; font-size:13.5px; cursor:pointer; color:var(--navy);}
-.tabs button.active{background:var(--navy); color:#fff; border-color:var(--navy);}
-.deliv-pane{display:none;}
-.deliv-pane.active{display:block;}
-.lang-toggle{display:flex; gap:6px; margin-bottom:10px;}
-.lang-toggle button{border:1px solid var(--line); background:#fff; padding:6px 14px; border-radius:100px; font-size:13px; cursor:pointer;}
-.lang-toggle button.active{background:var(--gold); color:var(--navy); border-color:var(--gold); font-weight:800;}
-.output-box{width:100%; min-height:360px; border:1px solid var(--line); border-radius:14px; padding:16px; font-size:14px; line-height:1.85; white-space:pre-wrap; background:#fcfdfd; resize:vertical;}
-.output-toolbar{display:flex; gap:8px; margin-top:10px; flex-wrap:wrap;}
-.empty-state{color:var(--muted); text-align:center; padding:50px 10px;}
+.big-check{font-size:56px; margin-bottom:10px;}
 
 /* voice */
 .voice-toggle-row{display:flex; align-items:center; gap:10px;}
@@ -145,42 +125,20 @@ footer.note{max-width:1180px; margin:0 auto; padding:0 24px 50px; color:var(--mu
   <div class="logo">BRANDY</div>
   <div class="crumbs" id="crumbs"></div>
   <div class="actions">
-    <button id="btnBackup" type="button">⬇ نسخة احتياطية</button>
-    <button id="btnSettings" type="button">⚙ الإعدادات</button>
+    <button id="btnRestart" type="button">🔄 بدء جلسة جديدة</button>
   </div>
 </div>
 
 <div id="app">
 
-  <!-- SETUP -->
+  <!-- SETUP / WELCOME -->
   <section id="screen-setup" class="screen active">
     <div class="wrap">
       <div class="setup-box card">
         <div class="logo-big">BRANDY</div>
         <p class="tag">استشارك الخاص في بناء البراند الشخصي والظهور الإلكتروني</p>
-        <div class="field">
-          <label for="apiKeyInput">مفتاح Anthropic API</label>
-          <input type="password" id="apiKeyInput" placeholder="sk-ant-...">
-          <p class="key-note">يُخزَّن المفتاح محليًا في متصفحك فقط، ولا يُرسل لأي مكان سوى Anthropic مباشرة عند كل محادثة. لا تشارك هذا المفتاح في أي محادثة أو رسالة — احصل عليه من console.anthropic.com.</p>
-        </div>
-        <div class="field">
-          <label for="modelSelect">النموذج</label>
-          <select id="modelSelect">
-            <option value="claude-sonnet-5-5">Claude Sonnet 5.5 (موصى به)</option>
-            <option value="claude-opus-5-5">Claude Opus 5.5 (أقوى وأبطأ)</option>
-            <option value="claude-haiku-5-5">Claude Haiku 5.5 (أسرع وأقل تكلفة)</option>
-          </select>
-        </div>
-        <div class="field">
-          <label for="elevenKeyInput">مفتاح ElevenLabs (اختياري — للمحادثة الصوتية)</label>
-          <input type="password" id="elevenKeyInput" placeholder="xi-api-key...">
-          <p class="key-note">بدونه، المقابلة تكون بالكتابة فقط. يُخزَّن محليًا في متصفحك فقط مثل مفتاح Anthropic.</p>
-        </div>
-        <div class="field">
-          <label for="elevenVoiceInput">Voice ID (اختياري — فيه افتراضي جاهز)</label>
-          <input type="text" id="elevenVoiceInput" placeholder="EXAVITQu4vr4xnSDxMaL">
-        </div>
-        <button class="btn gold wide" id="btnEnter" type="button">حفظ والدخول</button>
+        <p class="hint" style="margin-bottom:20px;">راح نمر سوا على سلسلة أقسام قصيرة، كتابة أو صوت، عشان نفهم قصتك ومسارك المهني وأهدافك. بياناتك تروح مباشرة لفريقنا للمراجعة، وما يشوفها أي طرف ثالث.</p>
+        <button class="btn gold wide" id="btnEnter" type="button">ابدأ</button>
       </div>
     </div>
   </section>
@@ -240,7 +198,7 @@ footer.note{max-width:1180px; margin:0 auto; padding:0 24px 50px; color:var(--mu
           <div class="section-controls">
             <button class="btn light sm" id="btnPrevSection" type="button">◂ القسم السابق</button>
             <button class="btn gold sm" id="btnNextSection" type="button">القسم التالي ▸</button>
-            <button class="btn primary sm" id="btnFinishIntake" type="button">إنهاء الأقسام والانتقال للتحليل</button>
+            <button class="btn primary sm" id="btnFinishIntake" type="button">إنهاء وإرسال لفريقنا</button>
           </div>
         </div>
         <aside class="data-panel" id="dataPanel"></aside>
@@ -248,72 +206,24 @@ footer.note{max-width:1180px; margin:0 auto; padding:0 24px 50px; color:var(--mu
     </div>
   </section>
 
-  <!-- ANALYZING -->
-  <section id="screen-analyzing" class="screen">
+  <!-- SUBMITTING -->
+  <section id="screen-submitting" class="screen">
     <div class="wrap">
       <div class="loading-box">
         <div class="spinner"></div>
-        <h2>براندي يحلل بياناتك الآن...</h2>
-        <p class="hint">يراجع كل ما جمعناه ويبني تحليلًا استراتيجيًا ومقترحات لهويتك — هذا التحليل يصل أولًا للمختص للمراجعة قبل عرضه عليك.</p>
+        <h2>جاري إرسال بياناتك...</h2>
       </div>
     </div>
   </section>
 
-  <!-- SPECIALIST -->
-  <section id="screen-specialist" class="screen">
+  <!-- SUBMITTED -->
+  <section id="screen-submitted" class="screen">
     <div class="wrap">
-      <div class="gate-banner"><span class="lock">🔒</span> هذا القسم مخصص للمختص فقط — لا يُعرض على العميل مباشرة قبل المراجعة.</div>
-      <div class="card">
-        <h2>التحليل الاستراتيجي ومقترحات بناء البراند</h2>
-        <textarea id="analysisBox" class="output-box" style="min-height:420px;"></textarea>
-        <div class="output-toolbar">
-          <button class="btn light sm" id="btnRegenAnalysis" type="button">إعادة توليد التحليل</button>
-        </div>
+      <div class="loading-box">
+        <div class="big-check">✅</div>
+        <h2>وصلت بياناتك بنجاح</h2>
+        <p class="hint">فريقنا بيراجعها ويتواصل معك قريبًا لتنسيق جلسة عرض التوجه المقترح لهويتك.</p>
       </div>
-      <div class="card" style="margin-top:16px;">
-        <label for="specialistNotes">ملاحظات المختص الخاصة (غير مرئية للعميل)</label>
-        <textarea id="specialistNotes" placeholder="أي تعديلات أو ملاحظات شخصية قبل الاعتماد..."></textarea>
-      </div>
-      <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap;">
-        <button class="btn gold" id="btnApproveAnalysis" type="button">اعتماد والانتقال لتنسيق الموعد</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- SCHEDULING -->
-  <section id="screen-scheduling" class="screen">
-    <div class="wrap">
-      <h1>تنسيق موعد العرض والمناقشة مع العميل</h1>
-      <p class="hint">بعد اعتماد التحليل، حدد موعد جلسة لعرض ومناقشة التوجه المقترح لهوية العميل وبراندة الشخصي.</p>
-      <div class="card">
-        <div class="sched-grid">
-          <div class="field"><label for="mDate">التاريخ</label><input type="date" id="mDate"></div>
-          <div class="field"><label for="mTime">الوقت</label><input type="time" id="mTime"></div>
-          <div class="field">
-            <label for="mMode">طريقة الجلسة</label>
-            <select id="mMode"><option value="حضوري">حضوري</option><option value="عن بعد">عن بعد</option></select>
-          </div>
-          <div class="field"><label for="mPlace">المكان / رابط الاتصال</label><input type="text" id="mPlace"></div>
-        </div>
-        <div class="field"><label for="mNotes">نقاط تحضيرية للعرض</label><textarea id="mNotes" placeholder="أهم النقاط التي تريد مناقشتها مع العميل..."></textarea></div>
-        <div style="display:flex; gap:10px; flex-wrap:wrap;">
-          <button class="btn light" id="btnSaveMeeting" type="button">حفظ موعد الجلسة</button>
-          <button class="btn light" id="btnExportIcs" type="button">تصدير دعوة (.ics)</button>
-          <button class="btn gold" id="btnGoDeliverables" type="button">الانتقال لتوليد المخرجات النهائية</button>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- DELIVERABLES -->
-  <section id="screen-deliverables" class="screen">
-    <div class="wrap">
-      <h1>المخرجات النهائية</h1>
-      <p class="hint">كل عنصر يُولَّد مستقل، ويمكن إعادة توليده أو تعديله يدويًا قبل النسخ أو التنزيل.</p>
-      <div style="margin-bottom:18px;"><button class="btn primary" id="btnGenAll" type="button">توليد كل المخرجات الناقصة</button></div>
-      <div class="tabs" id="delivTabs"></div>
-      <div id="delivPanes"></div>
-      <div style="margin-top:20px;"><button class="btn light" id="btnExportAll" type="button">تنزيل كل المخرجات كملف واحد</button></div>
     </div>
   </section>
 
@@ -370,24 +280,12 @@ const SECTIONS = [
    opening:"آخر شي — لو حد طلب منك تعرّف عن نفسك بجملتين بس، وش بتقول؟"}
 ];
 
-const DELIVERABLES = [
-  {id:"cv", label:"السيرة الذاتية", bilingual:true},
-  {id:"profile_doc", label:"الملف التعريفي", bilingual:true},
-  {id:"linkedin", label:"LinkedIn", bilingual:true},
-  {id:"persona", label:"برومبت الشخصية للذكاء الاصطناعي", bilingual:false},
-  {id:"content_prompts", label:"برومبتات المحتوى والمتابعة", bilingual:false}
-];
-
 function defaultState(){
   return {
-    apiKey:"", model:"claude-sonnet-5-5", stage:"setup",
-    elevenKey:"", elevenVoiceId:"EXAVITQu4vr4xnSDxMaL", voiceMode:false,
+    stage:"setup", voiceMode:false,
     homework:{goal:"", vision:"", ideas:""},
     profile:{}, chats:{}, sectionReady:{}, sectionIndex:0,
-    analysis:"", specialistNotes:"", approved:false,
-    meeting:{date:"", time:"", mode:"حضوري", place:"", notes:""},
-    deliverables:{cv:"", profile_doc:"", linkedin:"", persona:"", content_prompts:""},
-    activeDelivTab:"cv", delivLang:{cv:"ar", profile_doc:"ar", linkedin:"ar"}
+    submissionId:""
   };
 }
 let state = loadState();
@@ -417,44 +315,23 @@ function deepMerge(target, src){
 function extractText(resp){
   return (resp.content||[]).filter(b=>b.type==="text").map(b=>b.text).join("\n\n").trim();
 }
-function splitAREN(text){
-  const arIdx = text.indexOf("<<<AR>>>");
-  const enIdx = text.indexOf("<<<EN>>>");
-  if(arIdx===-1 || enIdx===-1) return {ar:text, en:""};
-  return {
-    ar: text.slice(arIdx+8, enIdx<arIdx?text.length:enIdx).trim(),
-    en: enIdx>-1 ? text.slice(enIdx+8).trim() : ""
-  };
-}
-function download(filename, text){
-  const blob = new Blob([text], {type:"text/plain;charset=utf-8"});
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = filename;
-  document.body.appendChild(a); a.click(); a.remove();
-}
 function escapeHtml(s){
   return String(s).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 }
 
 /* ===================== Anthropic API ===================== */
 async function anthropicMessages({system, messages, tools, max_tokens=1024}){
-  const body = {model: state.model, max_tokens, system, messages};
+  const body = {max_tokens, system, messages};
   if(tools) body.tools = tools;
-  const res = await fetch("https://api.anthropic.com/v1/messages", {
+  const res = await fetch("/api/anthropic", {
     method:"POST",
-    headers:{
-      "content-type":"application/json",
-      "x-api-key": state.apiKey,
-      "anthropic-version":"2023-06-01",
-      "anthropic-dangerous-direct-browser-access":"true"
-    },
+    headers:{"content-type":"application/json"},
     body: JSON.stringify(body)
   });
   if(!res.ok){
     let msg = res.status;
     try{ const j = await res.json(); msg = (j.error && j.error.message) || JSON.stringify(j); }catch(e){}
-    throw new Error("خطأ من Anthropic API (" + res.status + "): " + msg);
+    throw new Error("خطأ في الاتصال بالخادم (" + res.status + "): " + msg);
   }
   return res.json();
 }
@@ -562,22 +439,14 @@ async function sendIntakeMessage(userText){
 
 /* ===================== Rendering: topbar ===================== */
 const STAGES = [
-  {id:"setup", label:"الإعداد"},
+  {id:"setup", label:"البداية"},
   {id:"homework", label:"التمهيد"},
   {id:"intake", label:"المقابلة"},
-  {id:"analyzing", label:"التحليل"},
-  {id:"specialist", label:"مراجعة المختص"},
-  {id:"scheduling", label:"الموعد"},
-  {id:"deliverables", label:"المخرجات"}
+  {id:"submitted", label:"تم الإرسال"}
 ];
 function renderTopbar(){
   const crumbs = document.getElementById("crumbs");
-  crumbs.innerHTML = STAGES.map(s=>`<span data-stage="${s.id}" class="${s.id===state.stage?'active':''}">${s.label}</span>`).join("");
-  crumbs.querySelectorAll("span").forEach(el=>{
-    el.addEventListener("click", ()=>{
-      if(el.dataset.stage==="setup" || state.apiKey){ state.stage = el.dataset.stage; save(); render(); }
-    });
-  });
+  crumbs.innerHTML = STAGES.map(s=>`<span class="${s.id===state.stage?'active':''}">${s.label}</span>`).join("");
 }
 
 /* ===================== Rendering: dispatcher ===================== */
@@ -588,33 +457,17 @@ function render(){
   renderTopbar();
   if(state.stage==="homework") renderHomework();
   if(state.stage==="intake"){ renderSectionNav(); renderChat(); renderProfilePanel(); applyVoiceModeUI(); }
-  if(state.stage==="specialist") renderSpecialist();
-  if(state.stage==="scheduling") renderScheduling();
-  if(state.stage==="deliverables") renderDeliverables();
 }
 
 /* ===================== Setup screen ===================== */
-document.getElementById("apiKeyInput").value = state.apiKey || "";
-document.getElementById("modelSelect").value = state.model;
-document.getElementById("elevenKeyInput").value = state.elevenKey || "";
-document.getElementById("elevenVoiceInput").value = state.elevenVoiceId || "";
 document.getElementById("btnEnter").addEventListener("click", ()=>{
-  const key = document.getElementById("apiKeyInput").value.trim();
-  if(!key){ alert("أدخل مفتاح Anthropic API أولاً."); return; }
-  state.apiKey = key;
-  state.model = document.getElementById("modelSelect").value;
-  state.elevenKey = document.getElementById("elevenKeyInput").value.trim();
-  state.elevenVoiceId = document.getElementById("elevenVoiceInput").value.trim() || "EXAVITQu4vr4xnSDxMaL";
   if(state.stage==="setup") state.stage = "homework";
   save(); render();
 });
-document.getElementById("btnSettings").addEventListener("click", ()=>{
-  state.stage = "setup"; save(); render();
-});
-document.getElementById("btnBackup").addEventListener("click", ()=>{
-  const copy = JSON.parse(JSON.stringify(state));
-  delete copy.apiKey;
-  download("brandy-backup.json", JSON.stringify(copy, null, 2));
+document.getElementById("btnRestart").addEventListener("click", ()=>{
+  if(!confirm("هل تريد بدء جلسة جديدة؟ بيانات هذه الجلسة الحالية راح تُمسح من هذا الجهاز.")) return;
+  try{ localStorage.removeItem(STORAGE_KEY); }catch(e){}
+  location.reload();
 });
 
 /* ===================== Homework screen ===================== */
@@ -713,7 +566,6 @@ document.getElementById("btnSend").addEventListener("click", ()=>{
   const input = document.getElementById("chatInput");
   const text = input.value.trim();
   if(!text) return;
-  if(!state.apiKey){ alert("أدخل مفتاح API أولاً من شاشة الإعدادات."); return; }
   input.value = "";
   sendIntakeMessage(text);
 });
@@ -727,9 +579,28 @@ document.getElementById("btnNextSection").addEventListener("click", ()=>{
   state.sectionIndex = Math.min(SECTIONS.length-1, state.sectionIndex+1); save(); renderSectionNav(); renderChat(); renderProfilePanel();
 });
 document.getElementById("btnFinishIntake").addEventListener("click", ()=>{
-  if(!confirm("هل تريد إنهاء الأقسام والانتقال لتحليل براندي الاستراتيجي؟")) return;
-  runAnalysis();
+  if(!confirm("هل تريد إنهاء المقابلة وإرسال بياناتك لفريقنا؟")) return;
+  submitToSpecialist();
 });
+
+async function submitToSpecialist(){
+  state.stage = "submitting"; save(); render();
+  try{
+    const res = await fetch("/api/submissions", {
+      method:"POST",
+      headers:{"content-type":"application/json"},
+      body: JSON.stringify({homework: state.homework, profile: state.profile})
+    });
+    if(!res.ok) throw new Error("HTTP " + res.status);
+    const data = await res.json();
+    state.submissionId = data.id || "";
+  }catch(err){
+    alert("تعذّر إرسال البيانات: " + err.message + "\nتأكد من اتصالك بالإنترنت وحاول مرة أخرى.");
+    state.stage = "intake"; save(); render();
+    return;
+  }
+  state.stage = "submitted"; save(); render();
+}
 
 /* ===================== Voice (ElevenLabs STT/TTS) ===================== */
 let mediaRecorder = null, audioChunks = [], isRecording = false, voiceBusy = false;
@@ -747,27 +618,30 @@ function applyVoiceModeUI(){
 }
 
 document.getElementById("btnToggleVoice").addEventListener("click", ()=>{
-  if(!state.voiceMode && !state.elevenKey){
-    alert("أضف مفتاح ElevenLabs أولاً من شاشة الإعدادات عشان تفعّل الوضع الصوتي.");
-    return;
-  }
   state.voiceMode = !state.voiceMode;
   save();
   applyVoiceModeUI();
 });
 
+function blobToBase64(blob){
+  return new Promise((resolve, reject)=>{
+    const reader = new FileReader();
+    reader.onload = ()=> resolve(String(reader.result).split(",")[1] || "");
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+}
+
 async function elevenLabsSTT(blob){
-  const form = new FormData();
-  form.append("file", blob, "audio.webm");
-  form.append("model_id", "scribe_v1");
-  const res = await fetch("https://api.elevenlabs.io/v1/speech-to-text", {
+  const audio_base64 = await blobToBase64(blob);
+  const res = await fetch("/api/elevenlabs-stt", {
     method:"POST",
-    headers:{"xi-api-key": state.elevenKey},
-    body: form
+    headers:{"content-type":"application/json"},
+    body: JSON.stringify({audio_base64})
   });
   if(!res.ok){
     let msg = res.status;
-    try{ const j = await res.json(); msg = (j.detail && j.detail.message) || JSON.stringify(j); }catch(e){}
+    try{ const j = await res.json(); msg = JSON.stringify(j.error || j); }catch(e){}
     throw new Error("خطأ تحويل الصوت لنص (" + res.status + "): " + msg);
   }
   const data = await res.json();
@@ -775,15 +649,14 @@ async function elevenLabsSTT(blob){
 }
 
 async function elevenLabsTTS(text){
-  const voiceId = state.elevenVoiceId || "EXAVITQu4vr4xnSDxMaL";
-  const res = await fetch("https://api.elevenlabs.io/v1/text-to-speech/" + voiceId, {
+  const res = await fetch("/api/elevenlabs-tts", {
     method:"POST",
-    headers:{"xi-api-key": state.elevenKey, "content-type":"application/json", "accept":"audio/mpeg"},
-    body: JSON.stringify({text, model_id:"eleven_multilingual_v2"})
+    headers:{"content-type":"application/json"},
+    body: JSON.stringify({text})
   });
   if(!res.ok){
     let msg = res.status;
-    try{ const j = await res.json(); msg = (j.detail && j.detail.message) || JSON.stringify(j); }catch(e){}
+    try{ const j = await res.json(); msg = JSON.stringify(j.error || j); }catch(e){}
     throw new Error("خطأ توليد الصوت (" + res.status + "): " + msg);
   }
   const blob = await res.blob();
@@ -854,225 +727,6 @@ document.getElementById("btnMic").addEventListener("click", async ()=>{
   }
   btn.classList.remove("busy");
   voiceBusy = false;
-});
-
-/* ===================== Analysis ===================== */
-async function runAnalysis(){
-  if(!state.apiKey){ alert("أدخل مفتاح API أولاً."); return; }
-  state.stage = "analyzing"; save(); render();
-  const sys = [
-    "أنت خبير استراتيجي في البراند الشخصي والظهور الإلكتروني.",
-    "بناءً على بيانات العميل الكاملة المرفقة (JSON)، قدّم تحليلًا استراتيجيًا ومقترحات موجّهة لمختص البراند (وليس للعميل مباشرة) ليراجعها قبل عرضها على العميل.",
-    "اكتب بصيغة Markdown بالعناوين التالية بالضبط:",
-    "## ملخص الشخصية والمسار",
-    "## نقاط القوة الجوهرية",
-    "## التموضع المقترح (Positioning Statement)",
-    "## الهوية البصرية المقترحة",
-    "## السردية الرئيسية وقصص الإثبات",
-    "## فجوات تحتاج توضيحًا أكثر من العميل",
-    "## أسئلة يُفضّل مناقشتها مع العميل في جلسة العرض",
-    "## توصيات عملية للمخرجات النهائية"
-  ].join("\n");
-  const payload = {homework: state.homework, profile: state.profile};
-  try{
-    const resp = await anthropicMessages({system:sys, messages:[{role:"user", content:[{type:"text", text:JSON.stringify(payload, null, 2)}]}], max_tokens:4096});
-    state.analysis = extractText(resp);
-  }catch(err){
-    state.analysis = "⚠️ تعذّر توليد التحليل: " + err.message;
-  }
-  state.stage = "specialist"; save(); render();
-}
-
-/* ===================== Specialist screen ===================== */
-function renderSpecialist(){
-  document.getElementById("analysisBox").value = state.analysis;
-  document.getElementById("specialistNotes").value = state.specialistNotes;
-}
-document.getElementById("analysisBox").addEventListener("input", (e)=>{ state.analysis = e.target.value; save(); });
-document.getElementById("specialistNotes").addEventListener("input", (e)=>{ state.specialistNotes = e.target.value; save(); });
-document.getElementById("btnRegenAnalysis").addEventListener("click", ()=>{ runAnalysis(); });
-document.getElementById("btnApproveAnalysis").addEventListener("click", ()=>{
-  state.approved = true; state.stage = "scheduling"; save(); render();
-});
-
-/* ===================== Scheduling screen ===================== */
-function renderScheduling(){
-  document.getElementById("mDate").value = state.meeting.date;
-  document.getElementById("mTime").value = state.meeting.time;
-  document.getElementById("mMode").value = state.meeting.mode;
-  document.getElementById("mPlace").value = state.meeting.place;
-  document.getElementById("mNotes").value = state.meeting.notes;
-}
-["mDate","mTime","mMode","mPlace","mNotes"].forEach(id=>{
-  document.getElementById(id).addEventListener("input", (e)=>{
-    const key = id.slice(1,2).toLowerCase() + id.slice(2);
-    state.meeting[key] = e.target.value; save();
-  });
-});
-document.getElementById("btnSaveMeeting").addEventListener("click", ()=>{ save(); alert("تم حفظ موعد الجلسة."); });
-document.getElementById("btnExportIcs").addEventListener("click", ()=>{
-  const m = state.meeting;
-  if(!m.date){ alert("حدد تاريخ الجلسة أولاً."); return; }
-  const dt = (m.date.replace(/-/g,"")) + "T" + ((m.time||"10:00").replace(":","")+"00");
-  const ics = [
-    "BEGIN:VCALENDAR","VERSION:2.0","BEGIN:VEVENT",
-    "SUMMARY:جلسة عرض ومناقشة البراند الشخصي",
-    "DTSTART:"+dt,
-    "LOCATION:"+(m.place||""),
-    "DESCRIPTION:"+(m.notes||"").replace(/\n/g,"\\n"),
-    "END:VEVENT","END:VCALENDAR"
-  ].join("\r\n");
-  download("brandy-meeting.ics", ics);
-});
-document.getElementById("btnGoDeliverables").addEventListener("click", ()=>{
-  state.stage = "deliverables"; save(); render();
-});
-
-/* ===================== Deliverables ===================== */
-const DELIV_PROMPTS = {
-  cv: ()=>[
-    "أنت كاتب سيَر ذاتية محترف متخصص في البراند الشخصي.",
-    "بناءً على البيانات المرفقة (JSON)، اكتب سيرة ذاتية كاملة ومرتبة بصياغة قوية مرتكزة على الأرقام والنتائج.",
-    "اكتب نسختين متكاملتين مفصولتين بوضوح بالضبط بهذا الشكل:",
-    "<<<AR>>>",
-    "(السيرة الذاتية بالعربية الفصحى، Markdown بعناوين ##: نظرة عامة، الخبرات المهنية، التعليم، الشهادات، المهارات، التطوع، اللغات)",
-    "<<<EN>>>",
-    "(same CV translated and localized naturally into professional English, same structure)"
-  ].join("\n"),
-  profile_doc: ()=>[
-    "أنت خبير في كتابة الملفات التعريفية والسرديات الشخصية (Brand Profile) وليس السير الذاتية الجافة.",
-    "بناءً على البيانات المرفقة، اكتب: نبذة مختصرة جدًا (25-30 كلمة)، نبذة متوسطة (100-150 كلمة)، نبذة طويلة (250-350 كلمة)، أبرز الإنجازات (Highlights) كقائمة نقطية، وجملة تموضع (Positioning Statement).",
-    "اكتب نسختين بالضبط بهذا الشكل:",
-    "<<<AR>>>","(بالعربية)","<<<EN>>>","(in English)"
-  ].join("\n"),
-  linkedin: ()=>[
-    "أنت خبير في بناء ملفات LinkedIn الشخصية.",
-    "بناءً على البيانات المرفقة، اكتب: Headline مختصر وقوي تحت الاسم، قسم About (3-5 فقرات بصيغة الشخص الأول)، Featured/أبرز الإنجازات (4-6 نقاط)، وThree bullet points بالأرقام لكل وظيفة رئيسية في مساره المهني.",
-    "اكتب نسختين بالضبط بهذا الشكل:",
-    "<<<AR>>>","(بالعربية)","<<<EN>>>","(in English)"
-  ].join("\n"),
-  persona: ()=>[
-    "اكتب System Prompt متكامل يصف هذا الشخص بالكامل لأي مساعد ذكاء اصطناعي يُستخدم بالنيابة عنه أو لتوليد محتوى بأسلوبه.",
-    "يجب أن يشمل: من هو باختصار، أسلوبه في الحديث والكتابة (نغمة، طول الجمل، درجة الرسمية)، قيمه ومبادئه، مجالات خبرته وقوته الحقيقية، الطريقة التي يحب أن يتحدث بها عن نفسه، أمثلة من قصصه وعباراته المفضلة، وتعليمات صريحة لـ'افعل' و'لا تفعل' عند الكتابة بأسلوبه.",
-    "اكتبه بصيغة تعليمات مباشرة موجهة للنموذج (أنت / You are...) بحيث يمكن نسخه ولصقه كـ System Prompt جاهز للاستخدام فورًا.",
-    "اكتب بلغته الأساسية، وأضف في النهاية ملاحظة قصيرة بالإنجليزية لاستخدامه مع نموذج يكتب بالإنجليزية."
-  ].join("\n"),
-  content_prompts: ()=>[
-    "جهّز 3 برومبتات عملية جاهزة للاستخدام الفوري لمساعدة هذا الشخص على متابعة مجاله وصناعة محتوى مستمر، مخصصة بتفاصيله الفعلية (لا تتركها عامة):",
-    "## برومبت 1: تتبع الأخبار والمستجدات",
-    "(برومبت يُستخدم بشكل دوري أسبوعي مع أداة بحث/ذكاء اصطناعي لجلب آخر الأخبار والنقاط المرتبطة بمجالات قوته وتموضعه بالتحديد)",
-    "## برومبت 2: تحويل خبر إلى منشور بأسلوبه",
-    "(برومبت يأخذ خبرًا أو نقطة ويحولها لمنشور LinkedIn/X بأسلوبه الشخصي، بشكل محايد ومهني ومواكب للسوق)",
-    "## برومبت 3: خطة محتوى أسبوعية",
-    "(برومبت يولّد 3-5 أفكار منشورات أسبوعيًا متوافقة مع تموضعه وأهدافه المعلنة)"
-  ].join("\n")
-};
-
-async function generateDeliverable(id){
-  if(!state.apiKey){ alert("أدخل مفتاح API أولاً."); return; }
-  const payload = {homework:state.homework, profile:state.profile, analysis:state.analysis, specialistNotes:state.specialistNotes};
-  const sys = DELIV_PROMPTS[id]();
-  try{
-    const resp = await anthropicMessages({system:sys, messages:[{role:"user", content:[{type:"text", text:JSON.stringify(payload, null, 2)}]}], max_tokens:4096});
-    state.deliverables[id] = extractText(resp);
-  }catch(err){
-    state.deliverables[id] = "⚠️ تعذّر التوليد: " + err.message;
-  }
-  save();
-}
-
-function renderDeliverables(){
-  const tabs = document.getElementById("delivTabs");
-  tabs.innerHTML = DELIVERABLES.map(d=>`<button data-id="${d.id}" class="${state.activeDelivTab===d.id?'active':''}">${d.label}</button>`).join("");
-  tabs.querySelectorAll("button").forEach(b=>{
-    b.addEventListener("click", ()=>{ state.activeDelivTab = b.dataset.id; save(); renderDeliverables(); });
-  });
-
-  const panes = document.getElementById("delivPanes");
-  panes.innerHTML = DELIVERABLES.map(d=>{
-    const active = state.activeDelivTab===d.id ? "active" : "";
-    let langHtml = "";
-    let content = state.deliverables[d.id] || "";
-    if(d.bilingual){
-      const lang = state.delivLang[d.id] || "ar";
-      const parts = splitAREN(content);
-      content = lang==="ar" ? (parts.ar || content) : (parts.en || "لم تُولَّد نسخة إنجليزية بعد.");
-      langHtml = `<div class="lang-toggle">
-        <button data-lang="ar" data-id="${d.id}" class="${lang==='ar'?'active':''}">AR</button>
-        <button data-lang="en" data-id="${d.id}" class="${lang==='en'?'active':''}">EN</button>
-      </div>`;
-    }
-    const empty = content.trim()==="" ? `<div class="empty-state">لم يُولَّد هذا المحتوى بعد.</div>` : "";
-    return `<div class="deliv-pane ${active}" data-pane="${d.id}">
-      ${langHtml}
-      <textarea class="output-box" data-out="${d.id}">${escapeHtml(content)}</textarea>
-      ${empty}
-      <div class="output-toolbar">
-        <button class="btn gold sm" data-gen="${d.id}" type="button">توليد / إعادة توليد</button>
-        <button class="btn light sm" data-copy="${d.id}" type="button">نسخ</button>
-        <button class="btn light sm" data-dl="${d.id}" type="button">تنزيل .md</button>
-      </div>
-    </div>`;
-  }).join("");
-
-  panes.querySelectorAll("[data-gen]").forEach(b=>{
-    b.addEventListener("click", async ()=>{
-      b.disabled = true; b.textContent = "جاري التوليد...";
-      await generateDeliverable(b.dataset.gen);
-      renderDeliverables();
-    });
-  });
-  panes.querySelectorAll("[data-copy]").forEach(b=>{
-    b.addEventListener("click", ()=>{
-      const ta = panes.querySelector(`textarea[data-out="${b.dataset.copy}"]`);
-      navigator.clipboard.writeText(ta.value).then(()=>{
-        const old = b.textContent; b.textContent = "تم النسخ ✓"; setTimeout(()=>b.textContent=old, 1400);
-      }).catch(()=>alert("تعذّر النسخ."));
-    });
-  });
-  panes.querySelectorAll("[data-dl]").forEach(b=>{
-    b.addEventListener("click", ()=>{
-      const ta = panes.querySelector(`textarea[data-out="${b.dataset.dl}"]`);
-      download("brandy-"+b.dataset.dl+".md", ta.value);
-    });
-  });
-  panes.querySelectorAll("[data-lang]").forEach(b=>{
-    b.addEventListener("click", ()=>{
-      state.delivLang[b.dataset.id] = b.dataset.lang; save(); renderDeliverables();
-    });
-  });
-  panes.querySelectorAll("textarea[data-out]").forEach(ta=>{
-    ta.addEventListener("input", ()=>{
-      const id = ta.dataset.out;
-      const d = DELIVERABLES.find(x=>x.id===id);
-      if(d.bilingual){
-        const lang = state.delivLang[id] || "ar";
-        const parts = splitAREN(state.deliverables[id] || "");
-        if(lang==="ar") parts.ar = ta.value; else parts.en = ta.value;
-        state.deliverables[id] = "<<<AR>>>\n" + (parts.ar||"") + "\n<<<EN>>>\n" + (parts.en||"");
-      }else{
-        state.deliverables[id] = ta.value;
-      }
-      save();
-    });
-  });
-}
-
-document.getElementById("btnGenAll").addEventListener("click", async ()=>{
-  const btn = document.getElementById("btnGenAll");
-  btn.disabled = true;
-  for(const d of DELIVERABLES){
-    if(!(state.deliverables[d.id] || "").trim()){
-      btn.textContent = "جاري توليد: " + d.label + "...";
-      await generateDeliverable(d.id);
-      renderDeliverables();
-    }
-  }
-  btn.disabled = false; btn.textContent = "توليد كل المخرجات الناقصة";
-});
-document.getElementById("btnExportAll").addEventListener("click", ()=>{
-  const full = DELIVERABLES.map(d=>"# " + d.label + "\n\n" + (state.deliverables[d.id]||"(لم يُولَّد)")).join("\n\n---\n\n");
-  download("brandy-all-deliverables.md", full);
 });
 
 /* ===================== Boot ===================== */
