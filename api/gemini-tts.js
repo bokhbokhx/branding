@@ -43,7 +43,7 @@ module.exports = async (req, res) => {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
-          contents: [{ role: "user", parts: [{ text }] }],
+          contents: [{ role: "user", parts: [{ text: "TTS the following text verbatim, in a warm natural Saudi Arabic voice, with no extra commentary: " + text }] }],
           generationConfig: {
             responseModalities: ["AUDIO"],
             speechConfig: { voiceConfig: { prebuiltVoiceConfig: { voiceName } } }
