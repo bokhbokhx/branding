@@ -602,7 +602,7 @@ async function submitToSpecialist(){
   state.stage = "submitted"; save(); render();
 }
 
-/* ===================== Voice (ElevenLabs STT/TTS) ===================== */
+/* ===================== Voice (Gemini STT/TTS) ===================== */
 let mediaRecorder = null, audioChunks = [], isRecording = false, voiceBusy = false;
 
 function setVoiceStatus(text){
@@ -632,12 +632,12 @@ function blobToBase64(blob){
   });
 }
 
-async function elevenLabsSTT(blob){
+async function geminiSTT(blob){
   const audio_base64 = await blobToBase64(blob);
-  const res = await fetch("/api/elevenlabs-stt", {
+  const res = await fetch("/api/gemini-stt", {
     method:"POST",
     headers:{"content-type":"application/json"},
-    body: JSON.stringify({audio_base64})
+    body: JSON.stringify({audio_base64, mime_type: blob.type || "audio/webm"})
   });
   if(!res.ok){
     let msg = res.status;
@@ -648,8 +648,8 @@ async function elevenLabsSTT(blob){
   return (data.text || "").trim();
 }
 
-async function elevenLabsTTS(text){
-  const res = await fetch("/api/elevenlabs-tts", {
+async function geminiTTS(text){
+  const res = await fetch("/api/gemini-tts", {
     method:"POST",
     headers:{"content-type":"application/json"},
     body: JSON.stringify({text})
@@ -710,7 +710,7 @@ document.getElementById("btnMic").addEventListener("click", async ()=>{
   setVoiceStatus("✍️ براندي يفهم كلامك...");
   try{
     const blob = await stopRecording();
-    const text = await elevenLabsSTT(blob);
+    const text = await geminiSTT(blob);
     if(!text){
       setVoiceStatus("ما قدرت أميّز كلام، جرب مرة ثانية.");
     }else{
@@ -718,7 +718,7 @@ document.getElementById("btnMic").addEventListener("click", async ()=>{
       const reply = await sendIntakeMessage(text);
       if(reply){
         setVoiceStatus("🔊 براندي يتكلم...");
-        await elevenLabsTTS(reply);
+        await geminiTTS(reply);
       }
       setVoiceStatus("اضغط للتسجيل، واضغط ثانية لإيقافه وإرساله");
     }
