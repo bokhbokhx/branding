@@ -15,7 +15,7 @@ module.exports = async (req, res) => {
       res.status(400).json({ error: "audio_base64 required" });
       return;
     }
-    const model = process.env.GEMINI_STT_MODEL || "gemini-2.5-flash";
+    const model = process.env.GEMINI_STT_MODEL || "gemini-3.8-flash";
 
     const r = await fetch(
       "https://generativelanguage.googleapis.com/v1beta/models/" + model + ":generateContent?key=" + process.env.GEMINI_API_KEY,
