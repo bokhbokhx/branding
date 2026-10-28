@@ -1,5 +1,5 @@
 const { kvGet, kvSet } = require("./_lib/kv");
-const { requireAuth } = require("./_lib/auth");
+const { requireAuth, isAuthed } = require("./_lib/auth");
 
 module.exports = async (req, res) => {
   const id = (req.query && req.query.id) || "";
@@ -24,14 +24,26 @@ module.exports = async (req, res) => {
   }
 
   if (req.method === "PATCH") {
-    if (!requireAuth(req, res)) return;
     try {
       const rec = await kvGet("brandy:submission:" + id);
       if (!rec) {
         res.status(404).json({ error: "not found" });
         return;
       }
-      const patch = req.body || {};
+      let patch = req.body || {};
+      if (!isAuthed(req)) {
+        // Unauthenticated callers (the client, saving their own in-progress
+        // interview) may only touch their own data fields, never the
+        // specialist-only ones (analysis, approval, meeting, deliverables).
+        const safe = {};
+        if ("homework" in patch) safe.homework = patch.homework;
+        if ("profile" in patch) safe.profile = patch.profile;
+        if (Object.keys(safe).length === 0) {
+          res.status(401).json({ error: "Unauthorized" });
+          return;
+        }
+        patch = safe;
+      }
       Object.assign(rec, patch);
       await kvSet("brandy:submission:" + id, rec);
       res.status(200).json(rec);

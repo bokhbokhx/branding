@@ -34,14 +34,18 @@ function verifyToken(token) {
   }
 }
 
-function requireAuth(req, res) {
+function isAuthed(req) {
   const authHeader = req.headers["authorization"] || "";
   const token = authHeader.replace(/^Bearer\s+/i, "");
-  if (!token || !verifyToken(token)) {
+  return !!token && verifyToken(token);
+}
+
+function requireAuth(req, res) {
+  if (!isAuthed(req)) {
     res.status(401).json({ error: "Unauthorized" });
     return false;
   }
   return true;
 }
 
-module.exports = { signToken, verifyToken, requireAuth };
+module.exports = { signToken, verifyToken, requireAuth, isAuthed };

@@ -67,6 +67,9 @@ input:focus, textarea:focus, select:focus{outline:none; border-color:var(--gold)
 /* homework */
 .homework-list{background:#fffaf0; border:1px solid var(--gold-soft); border-radius:14px; padding:18px 20px; margin-bottom:22px;}
 .homework-list li{margin-bottom:6px;}
+.file-status{font-size:12.5px; color:var(--muted); margin-top:6px;}
+.file-status.ok{color:var(--gold); font-weight:700;}
+.file-status.err{color:var(--danger);}
 
 /* intake layout */
 .intake-layout{display:grid; grid-template-columns:240px 1fr 300px; gap:18px; align-items:start;}
@@ -143,7 +146,8 @@ footer.note{max-width:1180px; margin:0 auto; padding:0 24px 50px; color:var(--mu
         <div class="logo-big">BRANDY</div>
         <p class="tag">استشارك الخاص في بناء البراند الشخصي والظهور الإلكتروني</p>
         <p class="hint" style="margin-bottom:20px;">راح نمر سوا على سلسلة أقسام قصيرة، كتابة أو صوت، عشان نفهم قصتك ومسارك المهني وأهدافك. بياناتك تروح مباشرة لفريقنا للمراجعة، وما يشوفها أي طرف ثالث.</p>
-        <button class="btn gold wide" id="btnEnter" type="button">ابدأ</button>
+        <button class="btn gold wide" id="btnEnterVoice" type="button">🔴 ابدأ المحادثة الصوتية الآن</button>
+        <button class="btn light wide" id="btnEnter" type="button" style="margin-top:10px;">أو جهّز بياناتك وملفاتك أولًا</button>
       </div>
     </div>
   </section>
@@ -176,7 +180,33 @@ footer.note{max-width:1180px; margin:0 auto; padding:0 24px 50px; color:var(--mu
           <label for="hwIdeas">عندك أفكار أو تفاصيل معينة في بالك (اسم، ألوان، تموضع...)؟ اذكرها هنا</label>
           <textarea id="hwIdeas"></textarea>
         </div>
-        <button class="btn primary wide" id="btnStartIntake" type="button">أنا جاهز، نبدأ المقابلة مع براندي</button>
+      </div>
+
+      <div class="card">
+        <h3 style="margin-top:0;">عندك ملفات تساعدنا نفهمك أكثر؟ (اختياري)</h3>
+        <p class="hint">ارفعها إذا متوفرة — براندي يستفيد منها أثناء المقابلة وفي التحليل النهائي. صيغ مدعومة: PDF، DOCX، TXT.</p>
+        <div class="grid2">
+          <div class="field">
+            <label>هل لديك سيرة ذاتية؟</label>
+            <input type="file" id="fileCv" accept=".pdf,.docx,.txt">
+            <div class="file-status" id="fileCvStatus"></div>
+          </div>
+          <div class="field">
+            <label>هل لديك ملف براند شخصي سابق؟</label>
+            <input type="file" id="fileBrand" accept=".pdf,.docx,.txt">
+            <div class="file-status" id="fileBrandStatus"></div>
+          </div>
+        </div>
+        <div class="field">
+          <label>هل لديك بورتفوليو أو ملف أعمال؟</label>
+          <input type="file" id="filePortfolio" accept=".pdf,.docx,.txt">
+          <div class="file-status" id="filePortfolioStatus"></div>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="btn light" id="btnSaveProgress" type="button">حفظ التقدم والرجوع لاحقًا</button>
+        <button class="btn primary wide" id="btnStartIntake" type="button" style="flex:1;">أنا جاهز، نبدأ المقابلة مع براندي</button>
       </div>
     </div>
   </section>
@@ -248,18 +278,24 @@ footer.note{max-width:1180px; margin:0 auto; padding:0 24px 50px; color:var(--mu
 const STORAGE_KEY = "brandy_state_v2";
 
 const SECTIONS = [
+  {id:"s9", title:"كسر الجليد — شخصيتك",
+   goal:"أسئلة شخصية خفيفة ودافئة قبل أي شيء رسمي: كيف يصف نفسه، شو يحب، وش يحمّسه، دوره الطبيعي في الفريق (صاحب فكرة/منظم/محلل/منفذ)، كيف يتصرف تحت الضغط، ما يستنزفه، كيف يصفه زملاؤه. هذا أسلوب سلوكي مستوحى من أفضل الممارسات، ليس اختبار بيركمان الرسمي المرخّص. إذا كان عنده نتيجة بيركمان فعلية، احفظها في حقل منفصل 'نتيجة بيركمان الفعلية (إن وجدت)'.",
+   opening:"أهلًا وسهلًا فيك، أنا براندي 👋 قبل لا نبدأ بأي شي رسمي، أبغى أعرفك كإنسان أول. كيف توصف شخصيتك بكلمتين ثلاث؟ وايش الشي اللي يحمّسك فعلًا في شغلك؟"},
   {id:"s1", title:"الهوية الأساسية والهوية البصرية",
    goal:"الاسم الكامل، الاسم المعتمد للبراند، اللقب إن وجد، Tagline مختصر، الألوان المفضلة وما يُفضّل تجنبه، وجود شعار حالي، الأسلوب البصري العام (كلاسيكي/عصري/جريء/هادئ).",
-   opening:"أهلًا وسهلًا بك، أنا براندي 👋 خلنا نبدأ بالأساس: وش الاسم اللي تحب يظهر بيه براندك، وهل عندك Tagline أو جملة مختصرة توصف نفسك بيها؟"},
-  {id:"s2", title:"لمحة سريعة بالأرقام",
-   goal:"أرقام إجمالية يُفتخر بها تصلح لواجهة الملف التعريفي أو الموقع: عدد فعاليات، مستفيدين، نسب نمو، متابعين، فروع/شركات، ساعات تدريب، سنوات خبرة.",
-   opening:"ممتاز. الآن أبغى أرقام تفتخر فيها — أي رقم أو نسبة تحب الناس يعرفونها عنك؟ (مثال: سنوات خبرة، عدد مشاريع، نسبة نمو حققتها)"},
+   opening:"حلو، استمتعت فيها 🙌 خلنا ندخل بالأساسيات: وش الاسم اللي تحب يظهر بيه براندك، وهل عندك Tagline أو جملة مختصرة توصف نفسك بيها؟"},
   {id:"s3", title:"المسار المهني",
    goal:"لكل جهة عمل بشكل منفصل: اسم الجهة، القطاع، المسمى الوظيفي، الفترة، أهم المهام، الإنجازات بالأرقام والنسب.",
    opening:"خلنا نمر على مسارك المهني جهة بجهة. ابدأ بآخر أو أهم جهة عملت فيها: وش اسمها، ومسمّاك، والفترة؟"},
   {id:"s4", title:"التعليم",
    goal:"الدرجات العلمية، التخصص، الجامعة/الجهة، الفترة، عنوان رسالة التخرج أو البحث إن وجد.",
    opening:"خلنا نتكلم عن تعليمك — وش آخر درجة علمية حصلت عليها، وتخصصك، ومن أي جامعة؟"},
+  {id:"s8", title:"المشاريع والأعمال (Portfolio)",
+   goal:"اسم المشروع، الدور فيه، الفترة، النتيجة أو الأثر بالأرقام إن أمكن.",
+   opening:"بما إنك حكيت لي عن مسارك، خلنا نتكلم عن أبرز مشاريعك أو أعمالك الخاصة — وش أبرز مشروع تفتخر فيه؟"},
+  {id:"s2", title:"لمحة سريعة بالأرقام",
+   goal:"أرقام إجمالية يُفتخر بها تصلح لواجهة الملف التعريفي أو الموقع: عدد فعاليات، مستفيدين، نسب نمو، متابعين، فروع/شركات، ساعات تدريب، سنوات خبرة.",
+   opening:"ومن كل اللي حكيته، أبغى أرقام تفتخر فيها — أي رقم أو نسبة تحب الناس يعرفونها عنك؟ (مثال: سنوات خبرة، عدد مشاريع، نسبة نمو حققتها)"},
   {id:"s5", title:"التطوع والعمل المجتمعي",
    goal:"الجهة، الدور أو الصفة، الفترة، عدد ساعات التطوع، الأثر أو الإنجاز.",
    opening:"هل عندك تجارب تطوع أو عمل مجتمعي تحب تذكرها؟ وش الجهة ودورك فيها؟"},
@@ -269,18 +305,12 @@ const SECTIONS = [
   {id:"s7", title:"المقابلات والمشاركات الإعلامية",
    goal:"نوع المشاركة (مقابلة/بودكاست/منتدى/لجنة تحكيم)، الجهة أو المنصة، الموضوع، التاريخ.",
    opening:"هل سبق لك مقابلات إعلامية، بودكاست، أو مشاركات في منتديات أو لجان؟ عطني مثال."},
-  {id:"s8", title:"المشاريع والأعمال (Portfolio)",
-   goal:"اسم المشروع، الدور فيه، الفترة، النتيجة أو الأثر بالأرقام إن أمكن.",
-   opening:"خلنا نتكلم عن أبرز مشاريعك أو أعمالك الخاصة — وش أبرز مشروع تفتخر فيه؟"},
-  {id:"s9", title:"الشخصية والسلوك",
-   goal:"أسئلة سلوكية مستوحاة من أفضل ممارسات التحليل السلوكي (ليست اختبار بيركمان الرسمي المرخّص): دوره الطبيعي في الفريق، كيف يتصرف تحت الضغط، ما يحفزه، ما يستنزفه، كيف يصف نفسه الآخرون. وإذا كان عنده نتيجة بيركمان فعلية، يُحفظ ملخصها أو رابطها في حقل منفصل بعنوان 'نتيجة بيركمان الفعلية (إن وجدت)'.",
-   opening:"هذا القسم عن شخصيتك وسلوكك في العمل. لما يبدأ مشروع جديد، وش الدور اللي تاخذه بشكل طبيعي: صاحب الفكرة، المنظم، المحلل، أو المنفّذ؟ ولو عندك نتيجة اختبار بيركمان فعلية تقدر تلخصها لي أو تلصقها هنا."},
   {id:"s10", title:"التموضع والأهداف",
    goal:"أين يحس نفسه أقوى (إدارة/تسويق/تشغيل/مالية/ريادة)، المجال المستهدف مستقبلاً، أهداف البراند الشخصي (عضوية مجالس، وظائف، شراكات، ظهور إعلامي)، الأولوية الأولى والثانية.",
    opening:"وش المجال اللي تحس فيه نفسك أقوى، ووش هدفك الأساسي من بناء البراند الشخصي؟"},
   {id:"s11", title:"تحليل الذات (SWOT)",
    goal:"أبرز 3 نقاط قوة، أبرز نقطتين ضعف يعمل عليهما، الفرص التي يراها متاحة، التحديات أو المخاطر التي يستشعرها.",
-   opening:"خلنا نسوي تحليل سريع لنفسك — وش أبرز 3 نقاط قوة تشعر إنها تميزك؟"},
+   opening:"بعد كل اللي حكيناه، خلنا نسوي تحليل سريع لنفسك — وش أبرز 3 نقاط قوة تشعر إنها تميزك؟"},
   {id:"s12", title:"عوامل التميز والقصص الشخصية",
    goal:"ما يميزه عن غيره، مبدأ أو أسلوب عمل يتبعه دائمًا، شهادة أو اقتباس من آخرين، قصة نجاح بارزة، قصة تحدٍّ تم تجاوزه، قصة تحول مهني، ومواضيع حساسة يُفضّل استثناء ذكرها.",
    opening:"وش الشي اللي يميزك عن غيرك في نفس مجالك؟ وهل عندك قصة نجاح أو تحدٍّ تحب تُروى عنك؟"},
@@ -295,7 +325,7 @@ const SECTIONS = [
 function defaultState(){
   return {
     stage:"setup", voiceMode:false,
-    homework:{goal:"", vision:"", ideas:""},
+    homework:{goal:"", vision:"", ideas:"", files:{cv:null, brand:null, portfolio:null}},
     profile:{}, chats:{}, sectionReady:{}, sectionIndex:0,
     submissionId:""
   };
@@ -371,11 +401,32 @@ const INTAKE_TOOLS = [
   }
 ];
 
+function buildHomeworkContext(maxFileChars){
+  maxFileChars = maxFileChars || 2500;
+  const hw = state.homework || {};
+  const lines = [
+    "هدف العميل من البراند: " + (hw.goal || "-"),
+    "كيف يتخيل نفسه بعد سنتين: " + (hw.vision || "-"),
+    "أفكار مسبقة عنده: " + (hw.ideas || "-")
+  ];
+  const files = hw.files || {};
+  const labels = {cv:"نص السيرة الذاتية المرفوعة", brand:"نص ملف البراند السابق المرفوع", portfolio:"نص البورتفوليو المرفوع"};
+  Object.keys(labels).forEach(k=>{
+    const f = files[k];
+    if(f && f.text){
+      lines.push(labels[k] + " (" + f.name + "):\n" + f.text.slice(0, maxFileChars));
+    }
+  });
+  return lines.join("\n");
+}
+
 function buildIntakeSystemPrompt(section){
   const existing = JSON.stringify(state.profile[section.id]||{}, null, 2);
   const otherSummary = Object.keys(state.profile).filter(k=>k!==section.id).map(k=>"- "+k+": "+JSON.stringify(state.profile[k])).join("\n") || "لا يوجد بعد";
   return [
     "أنت \"براندي\"، مستشار خبير محترف في بناء البراند الشخصي والظهور الإلكتروني، تتحدث بالعربية بأسلوب ودود واحترافي وعميق، وتفهم جيدًا كيف تتحول قصة الشخص وأرقامه الحقيقية إلى سيرة ذاتية وملف تعريفي ومحتوى مؤثر.",
+    "",
+    typeof EXPERTISE_BLOCK !== "undefined" ? EXPERTISE_BLOCK : "",
     "",
     "مهمتك الآن: جمع معلومات القسم التالي فقط، عبر حوار طبيعي قصير (سؤال أو سؤالان كل رسالة)، وليس كاستبيان جامد.",
     "",
@@ -394,19 +445,30 @@ function buildIntakeSystemPrompt(section){
     existing,
     "",
     "ملخص سريع من أقسام أخرى سابقة (للسياق فقط، لا تطلب جمعها مرة ثانية):",
-    otherSummary
+    otherSummary,
+    "",
+    "معلومات تمهيدية عن العميل وملفاته المرفوعة (استفد منها، لا تطلب تكرارها):",
+    buildHomeworkContext()
   ].join("\n");
+}
+
+let backgroundSyncTimer = null;
+function scheduleBackgroundSync(){
+  clearTimeout(backgroundSyncTimer);
+  backgroundSyncTimer = setTimeout(()=>{ syncSubmission().catch(()=>{}); }, 3000);
 }
 
 function handleIntakeTool(name, input, section){
   if(name==="save_profile_data"){
     state.profile[section.id] = deepMerge(state.profile[section.id]||{}, input.patch||{});
     renderProfilePanel();
+    scheduleBackgroundSync();
     return "تم الحفظ.";
   }
   if(name==="mark_section_complete"){
     state.sectionReady[section.id] = true;
     renderSectionNav();
+    scheduleBackgroundSync();
     return "تم تسجيل اكتمال القسم.";
   }
   return "ok";
@@ -476,6 +538,10 @@ document.getElementById("btnEnter").addEventListener("click", ()=>{
   if(state.stage==="setup") state.stage = "homework";
   save(); render();
 });
+document.getElementById("btnEnterVoice").addEventListener("click", ()=>{
+  state.stage = "intake"; save(); render();
+  startLiveSession();
+});
 document.getElementById("btnRestart").addEventListener("click", ()=>{
   if(!confirm("هل تريد بدء جلسة جديدة؟ بيانات هذه الجلسة الحالية راح تُمسح من هذا الجهاز.")) return;
   try{ localStorage.removeItem(STORAGE_KEY); }catch(e){}
@@ -487,6 +553,7 @@ function renderHomework(){
   document.getElementById("hwGoal").value = state.homework.goal;
   document.getElementById("hwVision").value = state.homework.vision;
   document.getElementById("hwIdeas").value = state.homework.ideas;
+  renderFileStatus("cv"); renderFileStatus("brand"); renderFileStatus("portfolio");
 }
 ["hwGoal","hwVision","hwIdeas"].forEach(id=>{
   document.getElementById(id).addEventListener("input", (e)=>{
@@ -494,7 +561,72 @@ function renderHomework(){
     state.homework[key] = e.target.value; save();
   });
 });
-document.getElementById("btnStartIntake").addEventListener("click", ()=>{
+
+function renderFileStatus(key){
+  const el = document.getElementById("file" + key.charAt(0).toUpperCase() + key.slice(1) + "Status");
+  if(!el) return;
+  const f = state.homework.files[key];
+  if(!f){ el.textContent = ""; el.className = "file-status"; return; }
+  if(f.error){ el.textContent = "⚠️ " + f.error; el.className = "file-status err"; return; }
+  el.textContent = "✓ تم استخراج النص من: " + f.name;
+  el.className = "file-status ok";
+}
+
+async function handleFileUpload(key, file){
+  const statusEl = document.getElementById("file" + key.charAt(0).toUpperCase() + key.slice(1) + "Status");
+  statusEl.textContent = "جاري القراءة..."; statusEl.className = "file-status";
+  try{
+    const base64 = await blobToBase64(file);
+    const res = await fetch("/api/extract-text", {
+      method:"POST", headers:{"content-type":"application/json"},
+      body: JSON.stringify({file_base64: base64, mime_type: file.type, filename: file.name})
+    });
+    const data = await res.json();
+    if(!res.ok) throw new Error(data.error || ("HTTP " + res.status));
+    state.homework.files[key] = { name: file.name, text: data.text || "" };
+  }catch(err){
+    state.homework.files[key] = { name: file.name, error: err.message };
+  }
+  save();
+  renderFileStatus(key);
+}
+document.getElementById("fileCv").addEventListener("change", (e)=>{ if(e.target.files[0]) handleFileUpload("cv", e.target.files[0]); });
+document.getElementById("fileBrand").addEventListener("change", (e)=>{ if(e.target.files[0]) handleFileUpload("brand", e.target.files[0]); });
+document.getElementById("filePortfolio").addEventListener("change", (e)=>{ if(e.target.files[0]) handleFileUpload("portfolio", e.target.files[0]); });
+
+async function syncSubmission(){
+  const payload = {homework: state.homework, profile: state.profile};
+  if(!state.submissionId){
+    const res = await fetch("/api/submissions", {
+      method:"POST", headers:{"content-type":"application/json"}, body: JSON.stringify(payload)
+    });
+    if(!res.ok) throw new Error("HTTP " + res.status);
+    const data = await res.json();
+    state.submissionId = data.id;
+  }else{
+    const res = await fetch("/api/submission?id=" + encodeURIComponent(state.submissionId), {
+      method:"PATCH", headers:{"content-type":"application/json"}, body: JSON.stringify(payload)
+    });
+    if(!res.ok) throw new Error("HTTP " + res.status);
+  }
+  save();
+}
+
+document.getElementById("btnSaveProgress").addEventListener("click", async ()=>{
+  const btn = document.getElementById("btnSaveProgress");
+  btn.disabled = true; const old = btn.textContent; btn.textContent = "جاري الحفظ...";
+  try{
+    await syncSubmission();
+    btn.textContent = "تم الحفظ ✓";
+  }catch(err){
+    alert("تعذّر الحفظ: " + err.message);
+    btn.textContent = old;
+  }
+  setTimeout(()=>{ btn.textContent = old; btn.disabled = false; }, 1600);
+});
+
+document.getElementById("btnStartIntake").addEventListener("click", async ()=>{
+  try{ await syncSubmission(); }catch(e){ /* non-blocking */ }
   state.stage = "intake"; save(); render();
 });
 
@@ -598,14 +730,7 @@ document.getElementById("btnFinishIntake").addEventListener("click", ()=>{
 async function submitToSpecialist(){
   state.stage = "submitting"; save(); render();
   try{
-    const res = await fetch("/api/submissions", {
-      method:"POST",
-      headers:{"content-type":"application/json"},
-      body: JSON.stringify({homework: state.homework, profile: state.profile})
-    });
-    if(!res.ok) throw new Error("HTTP " + res.status);
-    const data = await res.json();
-    state.submissionId = data.id || "";
+    await syncSubmission();
   }catch(err){
     alert("تعذّر إرسال البيانات: " + err.message + "\nتأكد من اتصالك بالإنترنت وحاول مرة أخرى.");
     state.stage = "intake"; save(); render();
@@ -768,26 +893,38 @@ function liveAppendTranscript(role, text){
   box.scrollTop = box.scrollHeight;
 }
 
+const EXPERTISE_BLOCK = [
+  "خبرتك: أنت عميق المعرفة في الظهور الإلكتروني والبراند الشخصي وأفضل الممارسات العالمية، ومتخصص تحديدًا في السوق السعودي: تفهم طبيعة استخدام منصات التواصل في السعودية (لينكدإن للحضور المهني والفرص، إكس/تويتر للحضور الفكري والمتابعة السريعة والنقاشات، إنستقرام للجانب البصري والشخصي)، ثقافة العمل والمجالس والحوكمة المحلية، رؤية 2030 وأثرها على بناء البراند الشخصي للمحترفين والقيادات، وأسلوب المحتوى العربي اللي يحقق تفاعل حقيقي بدون مبالغة أو ادعاء."
+].join(" ");
+
 function buildLiveSystemInstruction(){
   const sectionsText = SECTIONS.map(s => "- " + s.title + ": " + s.goal).join("\n");
   const profileSummary = JSON.stringify(state.profile);
   return [
-    "أنت \"براندي\"، مساعد صوتي ذكي وودود، مستشار خبير في بناء البراند الشخصي والظهور الإلكتروني. تتحدث بالعربية بلهجة سعودية طبيعية ودافئة، مثل إنسان حقيقي في محادثة بودكاست، مو كأنك تقرأ استبيان.",
+    "أنت \"براندي\"، مساعد صوتي ذكي وودود، مستشار خبير في بناء البراند الشخصي والظهور الإلكتروني. تتحدث بالعربية بلهجة سعودية طبيعية ودافئة، بسرعة هادئة ومريحة (لا تتعجل في كلامك إطلاقًا)، مثل إنسان حقيقي في محادثة بودكاست، مو كأنك تقرأ استبيان.",
+    "",
+    EXPERTISE_BLOCK,
     "",
     "عن المنصة (براندي): منصة ذكاء اصطناعي تساعد المحترفين على بناء براندهم الشخصي. تجمع معلوماتهم عبر محادثة طبيعية مقسمة لأقسام، ثم ترسلها لفريق مختص يراجعها ويجهّز سيرة ذاتية احترافية، ملف تعريفي، محتوى لينكدإن بالعربي والإنجليزي، وحتى برومبتات ذكاء اصطناعي تمثّل أسلوب الشخص وتساعده ينشر محتوى مستمر. إذا سألك المستخدم أي وقت عن المنصة أو كيف تشتغل أو ليش تسأل هالسؤال، اشرح له بوضوح وبإيجاز بأسلوب ودود، وبعدها ارجع بسلاسة لأسئلة المقابلة من حيث توقفت.",
     "",
-    "مهمتك: تمر معه على الأقسام التالية بالترتيب، سؤال أو سؤالين كل مرة، بعمق كافٍ لاستخراج أرقام وتفاصيل حقيقية:",
+    "في أول رسالة من الجلسة فقط: عرّف نفسك باختصار، اشرح له بجملتين إيش تسوي المنصة، وبعدها ابدأ بأول سؤال من كسر الجليد بأسلوب دافئ.",
+    "",
+    "مهمتك: تمر معه على الأقسام التالية بالترتيب (الترتيب مدروس يبدأ بكسر الجليد الشخصي قبل أي شيء رسمي)، سؤال أو سؤالين كل مرة، بعمق كافٍ لاستخراج أرقام وتفاصيل حقيقية:",
     sectionsText,
     "",
     "تعليمات مهمة:",
+    "- أعطِ المستخدم وقته الكامل للتفكير والتعبير، لا تقاطعه ولا تستعجل الرد، واسمح بصمت قصير بين كلامه دون اعتباره انتهى الكلام.",
     "- بعد كل معلومة مفيدة، استخدم أداة save_profile_data فورًا لحفظها، محددًا section_id الصحيح (s1 إلى s14) وpatch بمفاتيح عربية واضحة.",
     "- إذا اكتمل قسم، استخدم أداة mark_section_complete مع section_id.",
     "- لا تكرر سؤال معلومة محفوظة مسبقًا إلا للتعميق أو التأكيد.",
-    "- خذ وقتك، لا تستعجل، واحكِ بأسلوب طبيعي متفاعل مع تعليقات قصيرة ودودة بين فترة وأخرى.",
+    "- احكِ بأسلوب طبيعي متفاعل مع تعليقات قصيرة ودودة بين فترة وأخرى، واستخدم خبرتك في البراند الشخصي والسوق السعودي لتقترح عليه زوايا ما فكر فيها.",
     "- إذا طلب المستخدم إنهاء الجلسة أو قال وداعًا، ودّعه بلطف.",
     "",
     "البيانات المحفوظة حتى الآن (للسياق فقط، لا تطلب تكرار جمعها):",
-    profileSummary
+    profileSummary,
+    "",
+    "معلومات تمهيدية عن العميل وملفاته المرفوعة (استفد منها، لا تطلب تكرارها):",
+    buildHomeworkContext(4000)
   ].join("\n");
 }
 
@@ -824,6 +961,7 @@ function liveHandleToolCall(name, args){
       state.profile[sid] = deepMerge(state.profile[sid] || {}, args.patch || {});
       save();
       if(state.stage === "intake") renderProfilePanel();
+      scheduleBackgroundSync();
     }
     return "saved";
   }
@@ -833,6 +971,7 @@ function liveHandleToolCall(name, args){
       state.sectionReady[sid] = true;
       save();
       if(state.stage === "intake") renderSectionNav();
+      scheduleBackgroundSync();
     }
     return "marked";
   }
@@ -912,7 +1051,13 @@ async function startLiveSession(){
         systemInstruction: { parts: [{ text: buildLiveSystemInstruction() }] },
         tools: LIVE_TOOLS,
         inputAudioTranscription: {},
-        outputAudioTranscription: {}
+        outputAudioTranscription: {},
+        realtimeInputConfig: {
+          automaticActivityDetection: {
+            endOfSpeechSensitivity: "END_SENSITIVITY_LOW",
+            silenceDurationMs: 1200
+          }
+        }
       }
     }));
   };
@@ -924,8 +1069,11 @@ async function startLiveSession(){
 
     if(obj.setupComplete){
       liveActive = true;
-      liveSetStatus("🎙️ أسمعك الآن...");
+      liveSetStatus("🎙️ براندي يرحّب فيك...");
       await initLiveAudioCapture();
+      liveWs.send(JSON.stringify({
+        clientContent: { turns: [{role:"user", parts:[{text:"ابدأ أنت بالكلام: عرّف نفسك واشرح المنصة بإيجاز ثم اسألني أول سؤال."}]}], turnComplete: true }
+      }));
       return;
     }
     if(obj.toolCall){
@@ -1001,6 +1149,8 @@ function stopLivePlayback(){
   livePlayCursor = 0;
 }
 
+const LIVE_PLAYBACK_RATE = 0.88; // slightly slower, calmer pace per user request
+
 function playLiveAudioChunk(base64){
   if(!livePlaybackCtx){
     livePlaybackCtx = new (window.AudioContext || window.webkitAudioContext)({sampleRate:24000});
@@ -1013,10 +1163,11 @@ function playLiveAudioChunk(base64){
   buffer.getChannelData(0).set(float32);
   const srcNode = livePlaybackCtx.createBufferSource();
   srcNode.buffer = buffer;
+  srcNode.playbackRate.value = LIVE_PLAYBACK_RATE;
   srcNode.connect(livePlaybackCtx.destination);
   const startAt = Math.max(livePlayCursor, livePlaybackCtx.currentTime);
   srcNode.start(startAt);
-  livePlayCursor = startAt + buffer.duration;
+  livePlayCursor = startAt + (buffer.duration / LIVE_PLAYBACK_RATE);
 }
 
 function cleanupLiveAudio(){
