@@ -166,15 +166,15 @@ textarea{min-height:70px; resize:vertical;}
 <script>
 const API_BASE = "";
 const SECTION_LABELS = [
+  {id:"s9", title:"كسر الجليد — الشخصية"},
   {id:"s1", title:"الهوية الأساسية والهوية البصرية"},
-  {id:"s2", title:"لمحة سريعة بالأرقام"},
   {id:"s3", title:"المسار المهني"},
   {id:"s4", title:"التعليم"},
+  {id:"s8", title:"المشاريع والأعمال (Portfolio)"},
+  {id:"s2", title:"لمحة سريعة بالأرقام"},
   {id:"s5", title:"التطوع والعمل المجتمعي"},
   {id:"s6", title:"العضويات والشهادات والمهارات والورش"},
   {id:"s7", title:"المقابلات والمشاركات الإعلامية"},
-  {id:"s8", title:"المشاريع والأعمال (Portfolio)"},
-  {id:"s9", title:"الشخصية والسلوك"},
   {id:"s10", title:"التموضع والأهداف"},
   {id:"s11", title:"تحليل الذات (SWOT)"},
   {id:"s12", title:"عوامل التميز والقصص الشخصية"},
@@ -338,10 +338,23 @@ function renderDetail(){
   html += `<div class="sec-card"><b>الهدف من البراند</b>${escapeHtml(hw.goal||"-")}</div>`;
   html += `<div class="sec-card"><b>رؤيته بعد سنتين</b>${escapeHtml(hw.vision||"-")}</div>`;
   html += `<div class="sec-card"><b>أفكار مسبقة</b>${escapeHtml(hw.ideas||"-")}</div>`;
+  const files = hw.files || {};
+  const fileLabels = {cv:"سيرة ذاتية", brand:"ملف براند سابق", portfolio:"بورتفوليو"};
+  Object.keys(fileLabels).forEach(k=>{
+    const f = files[k];
+    if(f && (f.text || f.error)){
+      const body = f.error ? ("⚠️ " + f.error) : `<details><summary>${escapeHtml(f.name)} — عرض النص المستخرج</summary><pre style="white-space:pre-wrap; font-size:12px; margin-top:6px;">${escapeHtml(f.text)}</pre></details>`;
+      html += `<div class="sec-card"><b>${fileLabels[k]}</b>${body}</div>`;
+    }
+  });
   SECTION_LABELS.forEach(s=>{
     const data = (current.profile||{})[s.id];
     if(data && Object.keys(data).length){
-      html += `<div class="sec-card"><b>${escapeHtml(s.title)}</b>${escapeHtml(JSON.stringify(data, null, 1))}</div>`;
+      const rows = Object.keys(data).map(k=>{
+        const v = data[k];
+        return `<div style="display:flex; justify-content:space-between; gap:10px; padding:3px 0; border-top:1px dashed var(--line);"><span style="color:var(--muted);">${escapeHtml(k)}</span><span style="text-align:left;">${escapeHtml(typeof v==="object"?JSON.stringify(v):String(v))}</span></div>`;
+      }).join("");
+      html += `<div class="sec-card"><b>${escapeHtml(s.title)}</b>${rows}</div>`;
     }
   });
   pv.innerHTML = html || "<p class='hint'>لا بيانات.</p>";
