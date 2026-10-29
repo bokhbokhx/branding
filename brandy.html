@@ -577,15 +577,22 @@ async function handleFileUpload(key, file){
   statusEl.textContent = "جاري القراءة..."; statusEl.className = "file-status";
   try{
     const base64 = await blobToBase64(file);
-    const res = await fetch("/api/extract-text", {
-      method:"POST", headers:{"content-type":"application/json"},
-      body: JSON.stringify({file_base64: base64, mime_type: file.type, filename: file.name})
-    });
+    const ctrl = new AbortController();
+    const t = setTimeout(()=>ctrl.abort(), 25000);
+    let res;
+    try{
+      res = await fetch("/api/extract-text", {
+        method:"POST", headers:{"content-type":"application/json"},
+        body: JSON.stringify({file_base64: base64, mime_type: file.type, filename: file.name}),
+        signal: ctrl.signal
+      });
+    }finally{ clearTimeout(t); }
     const data = await res.json();
     if(!res.ok) throw new Error(data.error || ("HTTP " + res.status));
     state.homework.files[key] = { name: file.name, text: data.text || "" };
   }catch(err){
-    state.homework.files[key] = { name: file.name, error: err.message };
+    const msg = err.name === "AbortError" ? "استغرقت القراءة وقتًا طويلًا — جرّب ملفًا آخر." : err.message;
+    state.homework.files[key] = { name: file.name, error: msg };
   }
   save();
   renderFileStatus(key);

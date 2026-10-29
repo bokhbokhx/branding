@@ -1,3 +1,11 @@
+function withTimeout(promise, ms, message) {
+  let timer;
+  const timeout = new Promise((_, reject) => {
+    timer = setTimeout(() => reject(new Error(message)), ms);
+  });
+  return Promise.race([promise, timeout]).finally(() => clearTimeout(timer));
+}
+
 async function handler(req, res) {
   if (req.method !== "POST") {
     res.status(405).json({ error: "Method not allowed" });
@@ -17,14 +25,22 @@ async function handler(req, res) {
 
     if (mimeType.includes("pdf") || filename.endsWith(".pdf")) {
       const pdfParse = require("pdf-parse");
-      const data = await pdfParse(buffer);
+      const data = await withTimeout(
+        pdfParse(buffer),
+        20000,
+        "تعذّر قراءة الملف خلال وقت معقول — قد يكون الملف تالفًا أو معقدًا جدًا."
+      );
       text = data.text || "";
     } else if (
       mimeType.includes("wordprocessingml") ||
       filename.endsWith(".docx")
     ) {
       const mammoth = require("mammoth");
-      const result = await mammoth.extractRawText({ buffer });
+      const result = await withTimeout(
+        mammoth.extractRawText({ buffer }),
+        20000,
+        "تعذّر قراءة الملف خلال وقت معقول — قد يكون الملف تالفًا أو معقدًا جدًا."
+      );
       text = result.value || "";
     } else if (mimeType.startsWith("text/") || filename.endsWith(".txt")) {
       text = buffer.toString("utf8");
