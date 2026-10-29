@@ -59,6 +59,15 @@ input:focus, textarea:focus, select:focus{outline:none; border-color:var(--gold)
 @media (max-width:760px){.grid2{grid-template-columns:1fr;}}
 
 /* setup */
+.hero-intro{max-width:880px; margin:10px auto 30px; text-align:center;}
+.hero-title{font-size:26px; color:var(--navy); margin:4px 0 10px;}
+.hero-sub{color:var(--muted); font-size:15px; line-height:1.9; max-width:640px; margin:0 auto 28px;}
+.feature-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:14px; text-align:right;}
+@media (max-width:700px){.feature-grid{grid-template-columns:1fr;}}
+.feature-card{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:18px; }
+.feature-card .fc-icon{font-size:22px; margin-bottom:6px;}
+.feature-card b{display:block; color:var(--navy); font-size:14.5px; margin-bottom:4px;}
+.feature-card p{color:var(--muted); font-size:13px; margin:0; line-height:1.7;}
 .setup-box{max-width:560px; margin:40px auto;}
 .setup-box .logo-big{font-family:'Cairo',sans-serif; font-weight:800; color:var(--navy); letter-spacing:6px; font-size:40px; text-align:center;}
 .setup-box .tag{text-align:center; color:var(--muted); margin-bottom:26px;}
@@ -130,7 +139,7 @@ footer.note{max-width:1180px; margin:0 auto; padding:0 24px 50px; color:var(--mu
 <body>
 
 <div id="topbar">
-  <div class="logo">BRANDY</div>
+  <div class="logo">BRANDI</div>
   <div class="crumbs" id="crumbs"></div>
   <div class="actions">
     <button id="btnRestart" type="button">🔄 بدء جلسة جديدة</button>
@@ -142,10 +151,19 @@ footer.note{max-width:1180px; margin:0 auto; padding:0 24px 50px; color:var(--mu
   <!-- SETUP / WELCOME -->
   <section id="screen-setup" class="screen active">
     <div class="wrap">
+      <div class="hero-intro">
+        <div class="logo-big" style="margin-bottom:6px;">BRANDI</div>
+        <h1 class="hero-title">هويتك الرقمية، بصوت يفهمك فعلًا</h1>
+        <p class="hero-sub">BRANDI مساعد ذكاء اصطناعي صوتي، يسولف معك بشكل طبيعي عشان يفهم قصتك ومسارك المهني، ويحوّلها لهوية شخصية احترافية جاهزة للنشر — مو استبيان، محادثة حقيقية.</p>
+        <div class="feature-grid">
+          <div class="feature-card"><div class="fc-icon">🎙️</div><b>محادثة صوتية حقيقية</b><p>تتكلم وبراندي يسمعك ويرد عليك طبيعي، وتقدر تسأله عن المنصة أي وقت وهو يشرح لك.</p></div>
+          <div class="feature-card"><div class="fc-icon">📄</div><b>يفهم ملفاتك</b><p>ارفع سيرتك الذاتية أو بورتفوليوك، وبراندي يستفيد منها أثناء المقابلة مباشرة.</p></div>
+          <div class="feature-card"><div class="fc-icon">🧑‍💼</div><b>مراجعة مختص قبل أي شي</b><p>بياناتك تروح أولًا لفريق متخصص يراجعها قبل أي مخرج نهائي — ما يشوفها طرف ثالث.</p></div>
+          <div class="feature-card"><div class="fc-icon">📦</div><b>مخرجات جاهزة للنشر</b><p>سيرة ذاتية، ملف تعريفي، محتوى لينكدإن بالعربي والإنجليزي، وبرومبتات ذكاء اصطناعي تمثّلك.</p></div>
+        </div>
+      </div>
       <div class="setup-box card">
-        <div class="logo-big">BRANDY</div>
-        <p class="tag">استشارك الخاص في بناء البراند الشخصي والظهور الإلكتروني</p>
-        <p class="hint" style="margin-bottom:20px;">راح نمر سوا على سلسلة أقسام قصيرة، كتابة أو صوت، عشان نفهم قصتك ومسارك المهني وأهدافك. بياناتك تروح مباشرة لفريقنا للمراجعة، وما يشوفها أي طرف ثالث.</p>
+        <p class="hint" style="margin-bottom:18px; text-align:center;">جاهز تبدأ؟ خذ وقتك، ما فيه إجابات خاطئة.</p>
         <button class="btn gold wide" id="btnEnterVoice" type="button">🔴 ابدأ المحادثة الصوتية الآن</button>
         <button class="btn light wide" id="btnEnter" type="button" style="margin-top:10px;">أو جهّز بياناتك وملفاتك أولًا</button>
       </div>
@@ -1156,7 +1174,7 @@ function stopLivePlayback(){
   livePlayCursor = 0;
 }
 
-const LIVE_PLAYBACK_RATE = 0.88; // slightly slower, calmer pace per user request
+const LIVE_PLAYBACK_RATE = 1.0; // was 0.88 — slowing raw playback shifts pitch down and sounds rough/coarse; pacing is now handled via the system instruction instead
 
 function playLiveAudioChunk(base64){
   if(!livePlaybackCtx){
